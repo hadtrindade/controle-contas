@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, render_template #noqa
+from flask import Blueprint, current_app, render_template  # noqa
 
 
 admin = Blueprint("admin", __name__)

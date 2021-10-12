@@ -7,11 +7,16 @@ name = "pypi"
 flask = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
-dynaconf = "*"
 flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
 
 [dev-packages]
+requests = "*"
+ipython = "*"
+ipdb = "*"
+black = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.9"

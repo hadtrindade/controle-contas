@@ -3,9 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 db = SQLAlchemy()
-migrate = Migrate()
+migrade = Migrate()
 
 
 def init_app(app):
     db.init_app(app)
-    migrate.init_app(app, db)
+    app.db = db
+    migrade.init_app(app, db)
