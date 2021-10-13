@@ -1,5 +1,5 @@
 from controle_contas.ext.serializer import ma
-from marshmallow import fields, ValidationError
+from marshmallow import fields
 from controle_contas.ext.auth.models import User
 from controle_contas.ext.db.models import Source, Entry
 
@@ -24,3 +24,17 @@ class UserSchema(ma.SQLAlchemySchema):
     admin = fields.Boolean()
     created_at = fields.DateTime()
     updated_at = fields.DateTime()
+
+
+class EntrySchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Entry
+
+    id = fields.Integer()
+    description = fields.String(required=True)
+    value = fields.Decimal(required=True)
+    quantum = fields.Integer()
+    created_at = fields.DateTime()
+    updated_at = fields.DateTime()
+    id_source = fields.Integer()
+    revenue = fields.Boolean()
