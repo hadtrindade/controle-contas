@@ -153,6 +153,8 @@ cython_debug/
 instance/*
 !instance/.gitignore
 /migrations
+
+controle_contas.db
 ### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
 
