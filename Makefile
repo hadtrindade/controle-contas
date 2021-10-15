@@ -3,8 +3,6 @@ run:
 
 test: 
 	pytest -s -v --cov=controle_contas
-	rm controle_contas/controle_contas.db
-	FLASK_APP=controle_contas/app.py flask db upgrade
 	
 black:
 	black -l 79 controle_contas
