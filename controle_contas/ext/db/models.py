@@ -11,7 +11,7 @@ class Source(db.Model):
     user = db.relationship("User", foreign_keys=id_user)
 
     def __repr__(self) -> str:
-        return f"<Source> {self.description}"
+        return self.description
 
 
 class Entry(db.Model):
@@ -29,4 +29,4 @@ class Entry(db.Model):
     source = db.relationship("Source", foreign_keys=id_source)
 
     def __repr__(self) -> str:
-        return f"<Entry {self.description}>"
+        return self.description

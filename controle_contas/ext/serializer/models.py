@@ -19,8 +19,10 @@ class UserSchema(ma.SQLAlchemySchema):
 
     id = fields.Integer()
     username = fields.String(required=True)
-    email = fields.Email()
-    passwd = fields.String(required=True)
+    first_name = fields.String()
+    last_name = first_name = fields.String()
+    email = fields.Email(required=True)
+    password = fields.String(required=True)
     admin = fields.Boolean()
     created_at = fields.DateTime()
     updated_at = fields.DateTime()

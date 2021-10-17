@@ -1,9 +1,9 @@
-from flask import Blueprint, current_app, render_template  # noqa
+from flask import Blueprint, render_template  # noqa
 
 
-admin = Blueprint("admin", __name__)
+auth = Blueprint("auth", __name__)
 
 
-@admin.route("/admin")
+@auth.route("/")
 def index():
-    return "teste"
+    return render_template("index.html")
