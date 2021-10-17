@@ -8,11 +8,32 @@ class User(db.Model):
     username = db.Column(
         "username", db.String(100), unique=True, nullable=False
     )
+    first_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
     email = db.Column("email", db.String(100), unique=True, nullable=False)
-    passwd = db.Column("passwd", db.String(50), nullable=False)
+    password = db.Column("password", db.String(), nullable=False)
     admin = db.Column("admin", db.Boolean, default=False)
     created_at = db.Column("created_at", db.DateTime, default=datetime.now())
     updated_at = db.Column("updated_at", db.DateTime)
 
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.id
+
+    # Required for administrative interface
+    def __unicode__(self):
+        return self.username
+
     def __repr__(self) -> str:
-        return f"<User {self.username}>"
+        return self.username

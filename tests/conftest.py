@@ -2,7 +2,7 @@ import pytest
 from controle_contas.app import create_app
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def app():
     app = create_app()
     app.testing = True
