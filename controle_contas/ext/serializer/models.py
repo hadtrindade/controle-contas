@@ -28,6 +28,14 @@ class UserSchema(ma.SQLAlchemySchema):
     updated_at = fields.DateTime()
 
 
+class UserLoginSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = User
+
+    username = fields.String(required=True)
+    password = fields.String(required=True)
+
+
 class EntrySchema(ma.SQLAlchemySchema):
     class Meta:
         model = Entry
