@@ -20,6 +20,6 @@ db-postgres:
 		--name bd_test \
 		-e POSTGRES_PASSWORD=postgres \
     	-e PGDATA=/var/lib/postgresql/data/pgdata \
-    	-v $(pwd)/bd_test:/var/lib/postgresql/data \
+    	-v /tmp:/var/lib/postgresql/data \
 		-p 5432:5432 \
     	postgres:13.1
