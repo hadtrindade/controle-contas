@@ -7,3 +7,7 @@ auth = Blueprint("auth", __name__)
 @auth.route("/")
 def index():
     return render_template("index.html")
+
+
+def init_app(app):
+    app.register_blueprint(auth)

@@ -204,3 +204,7 @@ def new_users():
     current_app.db.session.add(user)
     current_app.db.session.commit()
     return user_schema.jsonify(data), 201
+
+
+def init_app(app):
+    app.register_blueprint(api)

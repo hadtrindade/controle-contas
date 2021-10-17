@@ -1,0 +1,38 @@
+[default]
+DEBUG = true
+FLASK_ADMIN_SWATCH = "cosmo"
+ADMIN_NAME = "Controle de Contas"
+SQLALCHEMY_TRACK_MODIFICATIONS = false
+BABEL_DEFAULT_LOCALE = "pt"
+EXTENSIONS = [
+    "controle_contas.ext.babel:init_app",
+    "controle_contas.ext.db:init_app",
+    "controle_contas.ext.serializer:init_app",
+    "controle_contas.ext.login:init_app",
+    "controle_contas.ext.admin:init_app",
+    "controle_contas.ext.cli:init_app",
+    "controle_contas.ext.api.views:init_app",
+    "controle_contas.ext.auth.views:init_app",
+]
+
+[development]
+DEBUG = false
+FLASK_ADMIN_SWATCH = "cerulean"
+DEBUG_TB_TEMPLATE_EDITOR_ENABLED = true
+DEBUG_TB_PROFILER_ENABLED = true
+DEBUG_TB_INTERCEPT_REDIRECTS = false
+ADMIN_NAME = "Controle de contas (dev mode)"
+EXTENSIONS = [
+    "controle_contas.ext.babel:init_app",
+    "controle_contas.ext.db:init_app",
+    "controle_contas.ext.serializer:init_app",
+    "controle_contas.ext.login:init_app",
+    "controle_contas.ext.admin:init_app",
+    "controle_contas.ext.cli:init_app",
+    "controle_contas.ext.api.views:init_app",
+    "controle_contas.ext.auth.views:init_app",
+]
+
+
+[production]
+
