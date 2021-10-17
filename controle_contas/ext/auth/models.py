@@ -1,5 +1,6 @@
 from controle_contas.ext.db import db
 from datetime import datetime
+from werkzeug.security import check_password_hash
 
 
 class User(db.Model):
@@ -30,6 +31,9 @@ class User(db.Model):
 
     def get_id(self):
         return self.id
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
     # Required for administrative interface
     def __unicode__(self):

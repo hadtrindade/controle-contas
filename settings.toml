@@ -10,9 +10,11 @@ EXTENSIONS = [
     "controle_contas.ext.serializer:init_app",
     "controle_contas.ext.login:init_app",
     "controle_contas.ext.admin:init_app",
+    "controle_contas.ext.jwt:init_app",
     "controle_contas.ext.cli:init_app",
     "controle_contas.ext.api.views:init_app",
     "controle_contas.ext.auth.views:init_app",
+    "controle_contas.ext.site.views:init_app",
 ]
 
 [development]
@@ -28,9 +30,11 @@ EXTENSIONS = [
     "controle_contas.ext.serializer:init_app",
     "controle_contas.ext.login:init_app",
     "controle_contas.ext.admin:init_app",
+    "controle_contas.ext.jwt:init_app",
     "controle_contas.ext.cli:init_app",
     "controle_contas.ext.api.views:init_app",
     "controle_contas.ext.auth.views:init_app",
+    "controle_contas.ext.site.views:init_app",
 ]
 
 

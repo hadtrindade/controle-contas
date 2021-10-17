@@ -7,12 +7,14 @@ from controle_contas.ext.serializer.models import (
 )
 from marshmallow import ValidationError
 from controle_contas.ext.db.models import Entry, Source
-
 from controle_contas.ext.auth.models import User
+from flask_jwt_extended import jwt_required
+
 
 api = Blueprint("api", __name__)
 
 
+@jwt_required
 @api.route("/api/v1/entries", methods=["GET"])
 def get_entries():
     entry = Entry.query.all()
@@ -21,6 +23,7 @@ def get_entries():
     return EntrySchema(many=True).jsonify(entry), 200
 
 
+@jwt_required
 @api.route("/api/v1/entries/<int:pk>", methods=["GET"])
 def get_entry(pk):
     query = Entry.query.filter(Entry.id == pk)
@@ -29,6 +32,7 @@ def get_entry(pk):
     return EntrySchema(many=True).jsonify(query), 200
 
 
+@jwt_required
 @api.route("/api/v1/entries/<int:pk>", methods=["DELETE"])
 def del_entry(pk):
     query = Entry.query.filter(Entry.id == pk)
@@ -39,6 +43,7 @@ def del_entry(pk):
     return EntrySchema(many=True).jsonify({}), 200
 
 
+@jwt_required
 @api.route("/api/v1/entries/<int:pk>", methods=["PUT"])
 def update_entry(pk):
     entry_schema = EntrySchema()
@@ -63,6 +68,7 @@ def update_entry(pk):
     return EntrySchema(many=True).jsonify(query), 200
 
 
+@jwt_required
 @api.route("/api/v1/entries", methods=["POST"])
 def new_entries():
     entry_schema = EntrySchema()
@@ -76,6 +82,7 @@ def new_entries():
     return entry_schema.jsonify(data), 201
 
 
+@jwt_required
 @api.route("/api/v1/sources", methods=["GET"])
 def get_sources():
     query = Source.query.all()
@@ -84,6 +91,7 @@ def get_sources():
     return SourceSchema(many=True).jsonify(query), 200
 
 
+@jwt_required
 @api.route("/api/v1/sources/<int:pk>", methods=["GET"])
 def get_source(pk):
     query = Source.query.filter(Source.id == pk)
@@ -92,6 +100,7 @@ def get_source(pk):
     return SourceSchema(many=True).jsonify(query), 200
 
 
+@jwt_required
 @api.route("/api/v1/sources/<int:pk>", methods=["DELETE"])
 def del_source(pk):
 
@@ -103,6 +112,7 @@ def del_source(pk):
     return SourceSchema(many=True).jsonify({}), 200
 
 
+@jwt_required
 @api.route("/api/v1/sources/<int:pk>", methods=["PUT"])
 def update_source(pk):
     source_schema = SourceSchema()
@@ -126,6 +136,7 @@ def update_source(pk):
     return SourceSchema().jsonify(query), 200
 
 
+@jwt_required
 @api.route("/api/v1/sources", methods=["POST"])
 def new_sources():
     source_schema = SourceSchema()
@@ -139,6 +150,7 @@ def new_sources():
     return source_schema.jsonify(data), 201
 
 
+@jwt_required
 @api.route("/api/v1/users", methods=["GET"])
 def get_users():
     query = User.query.all()
@@ -147,6 +159,7 @@ def get_users():
     return UserSchema(many=True).jsonify(query), 200
 
 
+@jwt_required
 @api.route("/api/v1/users/<int:pk>", methods=["GET"])
 def get_user(pk):
 
@@ -167,6 +180,7 @@ def del_user(pk):
     return UserSchema(many=True).jsonify({}), 200
 
 
+@jwt_required
 @api.route("/api/v1/users/<int:pk>", methods=["PUT"])
 def update_user(pk):
     user_schema = UserSchema()
@@ -192,6 +206,7 @@ def update_user(pk):
     return user_schema.jsonify(data), 200
 
 
+@jwt_required
 @api.route("/api/v1/users", methods=["POST"])
 def new_users():
 
