@@ -44,6 +44,17 @@ tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)"
 tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins"]
 
 [[package]]
+name = "babel"
+version = "2.9.1"
+description = "Internationalization utilities"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[package.dependencies]
+pytz = ">=2015.7"
+
+[[package]]
 name = "backcall"
 version = "0.2.0"
 description = "Specifications for callback functions passed in to an API"
@@ -139,6 +150,33 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "dnspython"
+version = "2.1.0"
+description = "DNS toolkit"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+dnssec = ["cryptography (>=2.6)"]
+doh = ["requests", "requests-toolbelt"]
+idna = ["idna (>=2.1)"]
+curio = ["curio (>=1.2)", "sniffio (>=1.1)"]
+trio = ["trio (>=0.14.0)", "sniffio (>=1.1)"]
+
+[[package]]
+name = "email-validator"
+version = "1.1.3"
+description = "A robust email syntax and deliverability validation library for Python 2.x/3.x."
+category = "main"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
+
+[package.dependencies]
+dnspython = ">=1.15.0"
+idna = ">=2.0.0"
+
+[[package]]
 name = "flake8"
 version = "4.0.1"
 description = "the modular source code checker: pep8 pyflakes and co"
@@ -168,6 +206,47 @@ Werkzeug = ">=2.0"
 [package.extras]
 async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
+
+[[package]]
+name = "flask-admin"
+version = "1.5.8"
+description = "Simple and extensible admin interface framework for Flask"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Flask = ">=0.7"
+wtforms = "*"
+
+[package.extras]
+aws = ["boto"]
+azure = ["azure-storage-blob"]
+
+[[package]]
+name = "flask-babelex"
+version = "0.9.4"
+description = "Adds i18n/l10n support to Flask applications"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Babel = ">=1.0"
+Flask = "*"
+Jinja2 = ">=2.5"
+speaklater = ">=1.2"
+
+[[package]]
+name = "flask-login"
+version = "0.5.0"
+description = "User session management for Flask"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Flask = "*"
 
 [[package]]
 name = "flask-marshmallow"
@@ -229,7 +308,7 @@ docs = ["sphinx"]
 name = "idna"
 version = "3.2"
 description = "Internationalized Domain Names in Applications (IDNA)"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.5"
 
@@ -619,6 +698,14 @@ Werkzeug = ">=0.7"
 docs = ["sphinx", "sphinx-rtd-theme"]
 
 [[package]]
+name = "pytz"
+version = "2021.3"
+description = "World timezone definitions, modern and historical"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "regex"
 version = "2021.10.8"
 description = "Alternative regular expression module, to replace re."
@@ -657,6 +744,14 @@ name = "snowballstemmer"
 version = "2.1.0"
 description = "This package provides 29 stemmers for 28 languages generated from Snowball algorithms."
 category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "speaklater"
+version = "1.3"
+description = "implements a lazy string for python useful for use with gettext"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -759,10 +854,26 @@ python-versions = ">=3.6"
 [package.extras]
 watchdog = ["watchdog"]
 
+[[package]]
+name = "wtforms"
+version = "2.3.3"
+description = "A flexible forms validation and rendering library for Python web development."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+MarkupSafe = "*"
+
+[package.extras]
+email = ["email-validator"]
+ipaddress = ["ipaddress"]
+locale = ["Babel (>=1.3)"]
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "ea020e5f9f2824626884ddea002017f1d8d21d8186570d14f4fa25de825b21a7"
+content-hash = "80c01b0c44ef16416bfd65b6968c9b495d06bb7010d92f6e21f415f89f4f4eb0"
 
 [metadata.files]
 alembic = [
@@ -780,6 +891,10 @@ atomicwrites = [
 attrs = [
     {file = "attrs-21.2.0-py2.py3-none-any.whl", hash = "sha256:149e90d6d8ac20db7a955ad60cf0e6881a3f20d37096140088356da6c716b0b1"},
     {file = "attrs-21.2.0.tar.gz", hash = "sha256:ef6aaac3ca6cd92904cdd0d83f629a15f18053ec84e6432106f7a4d04ae4f5fb"},
+]
+babel = [
+    {file = "Babel-2.9.1-py2.py3-none-any.whl", hash = "sha256:ab49e12b91d937cd11f0b67cb259a57ab4ad2b59ac7a3b41d6c06c0ac5b0def9"},
+    {file = "Babel-2.9.1.tar.gz", hash = "sha256:bc0c176f9f6a994582230df350aa6e05ba2ebe4b3ac317eab29d9be5d2768da0"},
 ]
 backcall = [
     {file = "backcall-0.2.0-py2.py3-none-any.whl", hash = "sha256:fbbce6a29f263178a1f7915c1940bde0ec2b2a967566fe1c65c1dfb7422bd255"},
@@ -844,6 +959,14 @@ decorator = [
     {file = "decorator-5.1.0-py3-none-any.whl", hash = "sha256:7b12e7c3c6ab203a29e157335e9122cb03de9ab7264b137594103fd4a683b374"},
     {file = "decorator-5.1.0.tar.gz", hash = "sha256:e59913af105b9860aa2c8d3272d9de5a56a4e608db9a2f167a8480b323d529a7"},
 ]
+dnspython = [
+    {file = "dnspython-2.1.0-py3-none-any.whl", hash = "sha256:95d12f6ef0317118d2a1a6fc49aac65ffec7eb8087474158f42f26a639135216"},
+    {file = "dnspython-2.1.0.zip", hash = "sha256:e4a87f0b573201a0f3727fa18a516b055fd1107e0e5477cded4a2de497df1dd4"},
+]
+email-validator = [
+    {file = "email_validator-1.1.3-py2.py3-none-any.whl", hash = "sha256:5675c8ceb7106a37e40e2698a57c056756bf3f272cfa8682a4f87ebd95d8440b"},
+    {file = "email_validator-1.1.3.tar.gz", hash = "sha256:aa237a65f6f4da067119b7df3f13e89c25c051327b2b5b66dc075f33d62480d7"},
+]
 flake8 = [
     {file = "flake8-4.0.1-py2.py3-none-any.whl", hash = "sha256:479b1304f72536a55948cb40a32dce8bb0ffe3501e26eaf292c7e60eb5e0428d"},
     {file = "flake8-4.0.1.tar.gz", hash = "sha256:806e034dda44114815e23c16ef92f95c91e4c71100ff52813adf7132a6ad870d"},
@@ -851,6 +974,17 @@ flake8 = [
 flask = [
     {file = "Flask-2.0.2-py3-none-any.whl", hash = "sha256:cb90f62f1d8e4dc4621f52106613488b5ba826b2e1e10a33eac92f723093ab6a"},
     {file = "Flask-2.0.2.tar.gz", hash = "sha256:7b2fb8e934ddd50731893bdcdb00fc8c0315916f9fcd50d22c7cc1a95ab634e2"},
+]
+flask-admin = [
+    {file = "Flask-Admin-1.5.8.tar.gz", hash = "sha256:eb06a1f31b98881dee53a55c64faebd1990d6aac38826364b280df0b2679ff74"},
+]
+flask-babelex = [
+    {file = "Flask-BabelEx-0.9.4.tar.gz", hash = "sha256:39a59ccee9386a9d52d80b9101224402036aedc2c7873b11deef6e4e21cace27"},
+    {file = "Flask_BabelEx-0.9.4-py3-none-any.whl", hash = "sha256:f744d0557cb04cafed733cfa96e7373b46263d4cf79a2c5988c65085f360d873"},
+]
+flask-login = [
+    {file = "Flask-Login-0.5.0.tar.gz", hash = "sha256:6d33aef15b5bcead780acc339464aae8a6e28f13c90d8b1cf9de8b549d1c0b4b"},
+    {file = "Flask_Login-0.5.0-py2.py3-none-any.whl", hash = "sha256:7451b5001e17837ba58945aead261ba425fdf7b4f0448777e597ddab39f4fba0"},
 ]
 flask-marshmallow = [
     {file = "flask-marshmallow-0.14.0.tar.gz", hash = "sha256:bd01a6372cbe50e36f205cfff0fc5dab0b7b662c4c8b2c4fc06a3151b2950950"},
@@ -1099,6 +1233,10 @@ pytest-flask = [
     {file = "pytest-flask-1.2.0.tar.gz", hash = "sha256:46fde652f77777bf02dc91205aec4ce20cdf2acbbbd66a918ab91f5c14693d3d"},
     {file = "pytest_flask-1.2.0-py3-none-any.whl", hash = "sha256:fe25b39ad0db09c3d1fe728edecf97ced85e774c775db259a6d25f0270a4e7c9"},
 ]
+pytz = [
+    {file = "pytz-2021.3-py2.py3-none-any.whl", hash = "sha256:3672058bc3453457b622aab7a1c3bfd5ab0bdae451512f6cf25f64ed37f5b87c"},
+    {file = "pytz-2021.3.tar.gz", hash = "sha256:acad2d8b20a1af07d4e4c9d2e9285c5ed9104354062f275f3fcd88dcef4f1326"},
+]
 regex = [
     {file = "regex-2021.10.8-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:981c786293a3115bc14c103086ae54e5ee50ca57f4c02ce7cf1b60318d1e8072"},
     {file = "regex-2021.10.8-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:51feefd58ac38eb91a21921b047da8644155e5678e9066af7bcb30ee0dca7361"},
@@ -1153,6 +1291,9 @@ six = [
 snowballstemmer = [
     {file = "snowballstemmer-2.1.0-py2.py3-none-any.whl", hash = "sha256:b51b447bea85f9968c13b650126a888aabd4cb4463fca868ec596826325dedc2"},
     {file = "snowballstemmer-2.1.0.tar.gz", hash = "sha256:e997baa4f2e9139951b6f4c631bad912dfd3c792467e2f03d7239464af90e914"},
+]
+speaklater = [
+    {file = "speaklater-1.3.tar.gz", hash = "sha256:59fea336d0eed38c1f0bf3181ee1222d0ef45f3a9dd34ebe65e6bfffdd6a65a9"},
 ]
 sqlalchemy = [
     {file = "SQLAlchemy-1.4.25-cp27-cp27m-macosx_10_14_x86_64.whl", hash = "sha256:a36ea43919e51b0de0c0bc52bcfdad7683f6ea9fb81b340cdabb9df0e045e0f7"},
@@ -1214,4 +1355,8 @@ wcwidth = [
 werkzeug = [
     {file = "Werkzeug-2.0.2-py3-none-any.whl", hash = "sha256:63d3dc1cf60e7b7e35e97fa9861f7397283b75d765afcaefd993d6046899de8f"},
     {file = "Werkzeug-2.0.2.tar.gz", hash = "sha256:aa2bb6fc8dee8d6c504c0ac1e7f5f7dc5810a9903e793b6f715a9f015bdadb9a"},
+]
+wtforms = [
+    {file = "WTForms-2.3.3-py2.py3-none-any.whl", hash = "sha256:7b504fc724d0d1d4d5d5c114e778ec88c37ea53144683e084215eed5155ada4c"},
+    {file = "WTForms-2.3.3.tar.gz", hash = "sha256:81195de0ac94fbc8368abbaf9197b88c4f3ffd6c2719b5bf5fc9da744f3d829c"},
 ]
