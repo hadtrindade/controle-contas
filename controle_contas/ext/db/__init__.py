@@ -5,8 +5,8 @@ from decouple import config
 db = SQLAlchemy()
 migrade = Migrate()
 
-if config("FLASK_DEBUG"):
-    DATABASE_URI = config("DATABASE_URL_SQLITE")
+if config("FLASK_DEBUG", default=False):
+    DATABASE_URI = config("DATABASE_URL_SQLITE", default="sqlite:///controle_contas.db")
 else:
     DATABASE_URI = config("DATABASE_URL").replace("://", "ql://", 1)
 
