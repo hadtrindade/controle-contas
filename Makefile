@@ -1,5 +1,5 @@
 run:
-	FLASK_APP=controle_contas/app.py FLASK_ENV=Development flask run
+	FLASK_APP=controle_contas/app.py FLASK_ENV=development flask run
 
 test: 
 	pytest -s -v --cov=controle_contas
@@ -13,7 +13,7 @@ rm-db:
 	FLASK_APP=controle_contas/app.py flask db upgrade
 
 prod:
-	FLASK_APP=controle_contas/app.py FLASK_ENV=production flask run
+	gunicorn "controle_contas.app:create_app()" --log-file -
 
 db-postgres:
 	sudo docker run -d \

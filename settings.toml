@@ -1,5 +1,5 @@
 [default]
-DEBUG = true
+DEBUG = false
 FLASK_ADMIN_SWATCH = "cosmo"
 ADMIN_NAME = "Controle de Contas"
 SQLALCHEMY_TRACK_MODIFICATIONS = false
@@ -18,10 +18,12 @@ EXTENSIONS = [
 ]
 
 [development]
-DEBUG = false
+DEBUG = true
 FLASK_ADMIN_SWATCH = "cerulean"
 DEBUG_TB_TEMPLATE_EDITOR_ENABLED = true
+SQLALCHEMY_DATABASE_URI="sqlite:///controle_contas.db"
 DEBUG_TB_PROFILER_ENABLED = true
+FLASK_JWT_COOKIE_SECURE=false
 DEBUG_TB_INTERCEPT_REDIRECTS = false
 ADMIN_NAME = "Controle de contas (dev mode)"
 EXTENSIONS = [
@@ -40,3 +42,4 @@ EXTENSIONS = [
 
 [production]
 
+FLASK_JWT_COOKIE_SECURE=true
