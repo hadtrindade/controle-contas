@@ -7,6 +7,7 @@ from controle_contas.ext.db.models import Source, Entry
 class SourceSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Source
+        load_instance = True
 
     id = fields.Integer()
     description = fields.String(required=True)
@@ -16,6 +17,7 @@ class SourceSchema(ma.SQLAlchemySchema):
 class UserSchema(ma.SQLAlchemySchema):
     class Meta:
         model = User
+        load_instance = True
 
     id = fields.Integer()
     username = fields.String(required=True)
@@ -39,6 +41,7 @@ class UserLoginSchema(ma.SQLAlchemySchema):
 class EntrySchema(ma.SQLAlchemySchema):
     class Meta:
         model = Entry
+        load_instance = True
 
     id = fields.Integer()
     description = fields.String(required=True)

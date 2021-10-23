@@ -14,8 +14,8 @@ from flask_jwt_extended import jwt_required
 api = Blueprint("api", __name__)
 
 
-@jwt_required
 @api.route("/api/v1/entries", methods=["GET"])
+@jwt_required()
 def get_entries():
     entry = Entry.query.all()
     if not entry:
@@ -23,8 +23,8 @@ def get_entries():
     return EntrySchema(many=True).jsonify(entry), 200
 
 
-@jwt_required
 @api.route("/api/v1/entries/<int:pk>", methods=["GET"])
+@jwt_required()
 def get_entry(pk):
     query = Entry.query.filter(Entry.id == pk)
     if not query.first():
@@ -32,58 +32,58 @@ def get_entry(pk):
     return EntrySchema(many=True).jsonify(query), 200
 
 
-@jwt_required
 @api.route("/api/v1/entries/<int:pk>", methods=["DELETE"])
+@jwt_required()
 def del_entry(pk):
     query = Entry.query.filter(Entry.id == pk)
     if not query.first():
         return EntrySchema().jsonify({}), 404
     query.delete()
     current_app.db.session.commit()
-    return EntrySchema(many=True).jsonify({}), 200
+    return EntrySchema(many=True).jsonify({"message": "excluido"}), 200
 
 
-@jwt_required
 @api.route("/api/v1/entries/<int:pk>", methods=["PUT"])
+@jwt_required()
 def update_entry(pk):
-    entry_schema = EntrySchema()
+    entry_schema = EntrySchema(load_instance=False)
     query = Entry.query.filter(Entry.id == pk)
     if not query.first():
         return EntrySchema().jsonify({}), 404
-
-    if not request.json:
-        try:
-            data = entry_schema.load(
-                ast.literal_eval(request.args.to_dict()["json"])
-            )
-        except ValidationError as err:
-            return err.normalized_messages(), 422
-    else:
-        try:
-            data = entry_schema.load(request.json)
-        except ValidationError as err:
-            return err.normalized_messages(), 422
+    try:
+        data = entry_schema.load(request.json)
+    except ValidationError as err:
+        return err.normalized_messages(), 422
     query.update(data)
     current_app.db.session.commit()
     return EntrySchema(many=True).jsonify(query), 200
 
 
-@jwt_required
 @api.route("/api/v1/entries", methods=["POST"])
+@jwt_required()
 def new_entries():
     entry_schema = EntrySchema()
     try:
-        data = entry_schema.load(request.json)
+        if isinstance(request.json, list):
+            entries = entry_schema.load(
+                request.json, many=True, session=current_app.db.session
+            )
+            current_app.db.session.add_all(entries)
+            current_app.db.session.commit()
+            return entry_schema.jsonify(entries, many=True), 201
+        else:
+            entry = entry_schema.load(
+                request.json, session=current_app.db.session
+            )
+            current_app.db.session.add(entry)
+            current_app.db.session.commit()
+            return entry_schema.jsonify(entry), 201
     except ValidationError as err:
         return err.normalized_messages(), 422
-    entry = Entry(**data)
-    current_app.db.session.add(entry)
-    current_app.db.session.commit()
-    return entry_schema.jsonify(data), 201
 
 
-@jwt_required
 @api.route("/api/v1/sources", methods=["GET"])
+@jwt_required()
 def get_sources():
     query = Source.query.all()
     if not query:
@@ -91,8 +91,8 @@ def get_sources():
     return SourceSchema(many=True).jsonify(query), 200
 
 
-@jwt_required
 @api.route("/api/v1/sources/<int:pk>", methods=["GET"])
+@jwt_required()
 def get_source(pk):
     query = Source.query.filter(Source.id == pk)
     if not query.first():
@@ -100,8 +100,8 @@ def get_source(pk):
     return SourceSchema(many=True).jsonify(query), 200
 
 
-@jwt_required
 @api.route("/api/v1/sources/<int:pk>", methods=["DELETE"])
+@jwt_required()
 def del_source(pk):
 
     query = Source.query.filter(Source.id == pk)
@@ -112,46 +112,47 @@ def del_source(pk):
     return SourceSchema(many=True).jsonify({}), 200
 
 
-@jwt_required
 @api.route("/api/v1/sources/<int:pk>", methods=["PUT"])
+@jwt_required()
 def update_source(pk):
-    source_schema = SourceSchema()
+    source_schema = SourceSchema(load_instance=False)
     query = Source.query.filter(Source.id == pk)
     if not query.first():
         return source_schema.jsonify({}), 404
-    if not request.json:
-        try:
-            data = source_schema.load(
-                ast.literal_eval(request.args.to_dict()["json"])
-            )
-        except ValidationError as err:
-            return err.normalized_messages(), 422
-    else:
-        try:
-            data = source_schema.load(request.json)
-        except ValidationError as err:
-            return err.normalized_messages(), 422
+    try:
+        data = source_schema.load(request.json)
+    except ValidationError as err:
+        return err.normalized_messages(), 422
     query.update(data)
     current_app.db.session.commit()
     return SourceSchema().jsonify(query), 200
 
 
-@jwt_required
 @api.route("/api/v1/sources", methods=["POST"])
+@jwt_required()
 def new_sources():
     source_schema = SourceSchema()
     try:
-        data = source_schema.load(request.json)
+        if isinstance(request.json, list):
+            sources = source_schema.load(
+                request.json, many=True, session=current_app.db.session
+            )
+            current_app.db.session.add_all(sources)
+            current_app.db.session.commit()
+            return source_schema.jsonify(sources, many=True), 201
+        else:
+            source = source_schema.load(
+                request.json, session=current_app.db.session
+            )
+            current_app.db.session.add(source)
+            current_app.db.session.commit()
+            return source_schema.jsonify(source), 201
     except ValidationError as err:
         return err.normalized_messages(), 422
-    source = Source(**data)
-    current_app.db.session.add(source)
-    current_app.db.session.commit()
-    return source_schema.jsonify(data), 201
 
 
-@jwt_required
 @api.route("/api/v1/users", methods=["GET"])
+@jwt_required()
 def get_users():
     query = User.query.all()
     if not query:
@@ -159,8 +160,8 @@ def get_users():
     return UserSchema(many=True).jsonify(query), 200
 
 
-@jwt_required
 @api.route("/api/v1/users/<int:pk>", methods=["GET"])
+@jwt_required()
 def get_user(pk):
 
     query = User.query.filter(User.id == pk)
@@ -170,6 +171,7 @@ def get_user(pk):
 
 
 @api.route("/api/v1/users/<int:pk>", methods=["DELETE"])
+@jwt_required()
 def del_user(pk):
 
     query = User.query.filter(User.id == pk)
@@ -180,45 +182,45 @@ def del_user(pk):
     return UserSchema(many=True).jsonify({}), 200
 
 
-@jwt_required
 @api.route("/api/v1/users/<int:pk>", methods=["PUT"])
+@jwt_required()
 def update_user(pk):
-    user_schema = UserSchema()
+    user_schema = UserSchema(load_instance=False)
     query = User.query.filter(User.id == pk)
 
     if not query.first():
         return user_schema.jsonify({}), 404
-    if not request.json:
-        try:
-            data = user_schema.load(
-                ast.literal_eval(request.args.to_dict()["json"])
-            )
-        except ValidationError as err:
-            return err.normalized_messages(), 422
-    else:
-        try:
-            data = user_schema.load(request.json)
-        except ValidationError as err:
-            return err.normalized_messages(), 422
-    user = User(**data)
-    current_app.db.session.add(user)
-    current_app.db.session.commit()
-    return user_schema.jsonify(data), 200
-
-
-@jwt_required
-@api.route("/api/v1/users", methods=["POST"])
-def new_users():
-
-    user_schema = UserSchema()
     try:
         data = user_schema.load(request.json)
     except ValidationError as err:
         return err.normalized_messages(), 422
-    user = User(**data)
-    current_app.db.session.add(user)
+    query.update(data)
     current_app.db.session.commit()
-    return user_schema.jsonify(data), 201
+    return user_schema.jsonify(data), 200
+
+
+@api.route("/api/v1/users", methods=["POST"])
+@jwt_required()
+def new_users():
+
+    user_schema = UserSchema()
+    try:
+        if isinstance(request.json, list):
+            users = user_schema.load(
+                request.json, many=True, session=current_app.db.session
+            )
+            current_app.db.session.add_all(users)
+            current_app.db.session.commit()
+            return user_schema.jsonify(users, many=True), 201
+        else:
+            user = user_schema.load(
+                request.json, session=current_app.db.session
+            )
+            current_app.db.session.add(user)
+            current_app.db.session.commit()
+            return user_schema.jsonify(user), 201
+    except ValidationError as err:
+        return err.normalized_messages(), 422
 
 
 def init_app(app):
