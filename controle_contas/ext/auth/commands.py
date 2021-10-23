@@ -42,9 +42,8 @@ def create_user():
         "admin": True,
     }
     try:
-        data_is_valid = UserSchema().load(data)
-        user = [User(**data_is_valid)]
-        db.session.bulk_save_objects(user)
+        user = UserSchema().load(data)
+        db.session.add(user)
         db.session.commit()
         print("Usuario Criado")
     except ValidationError as err:
