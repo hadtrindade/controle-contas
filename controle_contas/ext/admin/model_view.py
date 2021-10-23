@@ -1,12 +1,10 @@
-import flask
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form import SecureForm
 from flask_admin import AdminIndexView
 from controle_contas.ext.admin.forms import LoginForm
-from flask import url_for, redirect, request
+from flask import url_for, redirect, request, flash
 from flask_admin import expose
 from flask_login import current_user, login_user, logout_user
-from flask import flash
 from werkzeug.security import check_password_hash
 
 
@@ -67,13 +65,13 @@ class CeAdminIndexView(AdminIndexView):
 
         form = LoginForm(request.form)
 
-        if form.validate_on_submit():
+        if request.method == "POST" and form.validate_on_submit():
             user = form.get_user()
             if user:
                 if not user and not check_password_hash(
                     user.password, form.password
                 ):
-                    flask("Usuário ou senha inválidos!!!")
+                    flash("Usuário ou senha inválidos!!!")
                 login_user(user)
 
         if current_user.is_authenticated:
