@@ -4,6 +4,9 @@ run:
 test: 
 	pytest -s -v --cov=controle_contas
 	
+test-cov-report: 
+	pytest -s -v --cov=controle_contas --cov-report=html
+
 black:
 	black -l 79 controle_contas
 	black -l 79 tests
