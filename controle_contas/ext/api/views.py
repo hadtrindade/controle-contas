@@ -1,4 +1,3 @@
-import ast
 from flask import Blueprint, current_app, request
 from controle_contas.ext.serializer.models import (
     EntrySchema,

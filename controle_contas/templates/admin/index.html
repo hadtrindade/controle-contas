@@ -5,7 +5,7 @@
 
     <div>
         {% if current_user.is_authenticated %}
-        <h1>Retirado do flask-admin example</h1>
+        <h1>Use com cuidado</h1>
         <p class="lead">
             Autenticado
         </p>
@@ -37,26 +37,26 @@
                             {% endif %}
                             </div>
                             {% endfor %}
-                            <button class="btn btn-primary" type="submit">Submit</button>
+                            <button class="btn btn-primary" type="submit">Login</button>
                         </form>
                         <hr>
                         <div class="row justify-content-end">
                             <a class="align-rigth" href="#">Esqueceu a senha?</a>
                         </div>
                         {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                            {% for message in messages %}
-                                <script>
-                                    $('.alert').alert()
-                                </script>
-                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        {{message}}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    </div>
-                            {% endfor %}
-                        {% endif %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <script>
+                                        $('.alert').alert()
+                                    </script>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            {{message}}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                {% endfor %}
+                            {% endif %}
                         {% endwith %}
                     </div>
                 </div>

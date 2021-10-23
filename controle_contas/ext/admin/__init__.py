@@ -16,7 +16,7 @@ def init_app(app):
 
     admin.name = app.config["ADMIN_NAME"] = "Controle de Contas"
     admin.template_mode = "bootstrap4"
-    admin.base_template = "my_master.html"
+    admin.base_template = "admin/controle_contas_acess_control.html"
     admin.init_app(app, index_view=CeAdminIndexView())
 
     admin.add_view(SourceModelView(Source, app.db.session))

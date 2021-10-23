@@ -4,6 +4,7 @@ FLASK_ADMIN_SWATCH = "cosmo"
 ADMIN_NAME = "Controle de Contas"
 SQLALCHEMY_TRACK_MODIFICATIONS = false
 BABEL_DEFAULT_LOCALE = "pt"
+WTF_CSRF_ENABLED = true
 EXTENSIONS = [
     "controle_contas.ext.babel:init_app",
     "controle_contas.ext.db:init_app",

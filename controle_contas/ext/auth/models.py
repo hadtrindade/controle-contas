@@ -26,6 +26,12 @@ class User(db.Model):
         return True
 
     @property
+    def is_staff(self):
+        if self.admin:
+            return True
+        return False
+
+    @property
     def is_anonymous(self):
         return False
 

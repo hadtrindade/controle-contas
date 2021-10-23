@@ -1,0 +1,79 @@
+{% extends  'base.html' %}
+
+{% block title %} Plano de Chamada - Login {% endblock title %}
+
+{% block nav %}{% endblock nav %}
+
+{% block body %}
+<div class="container h-100"> 
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-lg-6 col-xl-6 align-items-center shadow p-3 mb-5 bg-white rounded">
+            <div class="page-header pb-3 pt-3">
+                <h1 class="text-center">Controle de Contas</h1>
+            </div>
+            <div class="container col-lg-8 col-xl-8 mb-5">
+                <div class="row pt-3">
+                    <h3 class="text-left">Login</h3>
+                </div>
+                <hr>
+                <form method="POST" action="">
+                    {{ form.hidden_tag() if form.hidden_tag }}
+                    {% for f in form if f.type != 'CSRFTokenField' %}
+                        <div class="form-group">
+                        {{ f.label }}<br>
+                        {{ f }}
+                        {% if f.errors %}
+                            <ul>
+                                {% for e in f.errors %}
+                                <li>{{ e }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        </div>
+                    {% endfor %}
+                    <button class="btn btn-primary" type="submit">Login</button>
+                </form>
+                <hr>
+                <div class="row justify-content-end">
+                    <a class="align-rigth" href="#">Esqueceu a senha?</a>
+                </div>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <script>
+                                $('.alert').alert()
+                            </script>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{message}}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock body %}
+
+{% block footer %}
+
+<footer>
+    <div class="rigths">
+        <div class="container">
+            <div class="row">
+            <div class="col">
+                <p class="text-center" > Controle de Contas. Todos os direitos reservados.</p>
+            </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+{% endblock footer %}
+
+
