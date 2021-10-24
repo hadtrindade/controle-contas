@@ -9,8 +9,14 @@ from flask import (
 )
 from flask_login import login_user, logout_user, login_required, current_user
 from controle_contas.ext.admin.forms import LoginForm
-from controle_contas.ext.site.forms import RegisterForm
+from controle_contas.ext.site.forms import (
+    RegisterForm,
+    EntriesForm,
+    SourcesForm,
+    InvoiceForm,
+)
 from controle_contas.ext.auth.models import User
+from controle_contas.ext.db.models import Entry, Source
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -62,6 +68,55 @@ def register():
 @login_required
 def logout():
     logout_user()
+    return redirect(url_for("site.index"))
+
+
+@site.route("/dashboard")
+@login_required
+def dashboard():
+    return redirect(url_for("site.index"))
+
+
+@site.route("/add-entries", methods=["GET", "POST"])
+@login_required
+def add_entries():
+    entries = Source.query.filter(Entry.id_source == current_user.id).all()
+    entries_list = [(e.id, e.description) for e in entries]
+    form = EntriesForm(request.form)
+    form.id_source.choices = entries_list
+    if request.method == "POST" and form.validate_on_submit():
+        user = Entry(
+            description=form.description.data,
+            value=form.value.data,
+            quantum=form.quantum.data,
+            id_source=form.id_source.data,
+            revenue=form.revenue.data,
+        )
+        current_app.db.session.add(user)
+        current_app.db.session.commit()
+        return redirect(url_for("site.add_entries"))
+    return render_template("entries.html", form=form)
+
+
+@site.route("/add-sources", methods=["GET", "POST"])
+@login_required
+def add_sources():
+
+    form = SourcesForm(request.form)
+    if request.method == "POST" and form.validate_on_submit():
+        user = Source(
+            description=form.description.data,
+            id_user=current_user.id,
+        )
+        current_app.db.session.add(user)
+        current_app.db.session.commit()
+        return redirect(url_for("site.add_sources"))
+    return render_template("sources.html", form=form)
+
+
+@site.route("/generate-invoice")
+@login_required
+def generate_invoice():
     return redirect(url_for("site.index"))
 
 

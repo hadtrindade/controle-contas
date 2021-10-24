@@ -67,7 +67,7 @@ class CeAdminIndexView(AdminIndexView):
 
         if request.method == "POST" and form.validate_on_submit():
             user = form.get_user()
-            if user:
+            if user and user.is_staff:
                 if not user and not check_password_hash(
                     user.password, form.password
                 ):

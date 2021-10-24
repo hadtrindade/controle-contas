@@ -38,6 +38,7 @@ EXTENSIONS = [
     "controle_contas.ext.api.views:init_app",
     "controle_contas.ext.auth.views:init_app",
     "controle_contas.ext.site.views:init_app",
+    "controle_contas.ext.debug_toolbar:init_app",
 ]
 
 
