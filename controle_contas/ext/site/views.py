@@ -80,19 +80,19 @@ def dashboard():
 @site.route("/add-entries", methods=["GET", "POST"])
 @login_required
 def add_entries():
-    entries = Source.query.filter(Entry.id_source == current_user.id).all()
-    entries_list = [(e.id, e.description) for e in entries]
+    sources = Source.query.filter(Source.id_user == current_user.id).all()
+    sources_list = [(s.id, s.description) for s in sources]
     form = EntriesForm(request.form)
-    form.id_source.choices = entries_list
+    form.id_source.choices = sources_list
     if request.method == "POST" and form.validate_on_submit():
-        user = Entry(
+        entry = Entry(
             description=form.description.data,
             value=form.value.data,
             quantum=form.quantum.data,
             id_source=form.id_source.data,
             revenue=form.revenue.data,
         )
-        current_app.db.session.add(user)
+        current_app.db.session.add(entry)
         current_app.db.session.commit()
         return redirect(url_for("site.add_entries"))
     return render_template("entries.html", form=form)
@@ -104,11 +104,11 @@ def add_sources():
 
     form = SourcesForm(request.form)
     if request.method == "POST" and form.validate_on_submit():
-        user = Source(
+        source = Source(
             description=form.description.data,
             id_user=current_user.id,
         )
-        current_app.db.session.add(user)
+        current_app.db.session.add(source)
         current_app.db.session.commit()
         return redirect(url_for("site.add_sources"))
     return render_template("sources.html", form=form)
