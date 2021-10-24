@@ -1,6 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import fields, validators, PasswordField
-from wtforms.fields.html5 import EmailField
+from wtforms import (
+    fields,
+    validators,
+    PasswordField,
+    SelectField,
+    BooleanField,
+)
+from wtforms.fields.html5 import EmailField, DecimalField, IntegerField
 
 
 class RegisterForm(FlaskForm):
@@ -25,3 +31,27 @@ class RegisterForm(FlaskForm):
         ],
     )
     confirm = PasswordField("Repita a senha")
+
+
+class EntriesForm(FlaskForm):
+
+    description = fields.StringField(
+        "Descrição", validators=[validators.DataRequired()]
+    )
+    value = DecimalField("Valor", validators=[validators.DataRequired()])
+    quantum = IntegerField("Parcela", validators=[validators.DataRequired()])
+    id_source = SelectField(
+        "Origem", coerce=int, validators=[validators.DataRequired()]
+    )
+    revenue = BooleanField("Receita?")
+
+
+class SourcesForm(FlaskForm):
+
+    description = fields.StringField(
+        "Descrição", validators=[validators.DataRequired()]
+    )
+
+
+class InvoiceForm(FlaskForm):
+    ...

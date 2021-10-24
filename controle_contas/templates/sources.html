@@ -1,14 +1,12 @@
 {% extends  'base.html' %}
-
-{% block title %} Controle de Contas - Registro {% endblock title %}
-
+{% block title %} Controle de Contas - Cadastro de Entradas {% endblock title %}
 {% block body %}
 
 <div class="container h-100">
     <div class="row h-100 justify-content-center align-items-center">
-        <div class="col-sm-4 col-md-7 col-lg-10 col-xl-10 align-items-center shadow p-3 mb-5 bg-white rounded">
+        <div class="col-sm-4 col-md-4 col-lg-12 col-xl-12 align-items-center shadow p-3 mb-5 bg-white rounded">
             <div class="page-header pt-5">
-                <h1 class="text-center">Cadastro</h1>
+                <h1 class="text-center">Origem</h1>
             </div>
             <form method="POST" action="">
                 {{ form.hidden_tag() if form.hidden_tag }}
@@ -26,9 +24,8 @@
                     </div>
                 {% endfor %}
                 <button class="btn btn-primary" type="submit">Cadastrar</button>
-            </form>          
+            </form>
         </div>
     </div>
 </div>
-
 {% endblock body %}
