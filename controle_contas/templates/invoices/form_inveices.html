@@ -1,0 +1,9 @@
+<div class="modal-body">
+    {{ form.hidden_tag() if form.hidden_tag }}
+    {% for f in form if f.type != 'CSRFTokenField' %}
+        <div class="form-group">
+        {{ f.label(class="form-label") }}
+        {{ f(class="form-control") }}
+        </div>
+    {% endfor %}
+</div>

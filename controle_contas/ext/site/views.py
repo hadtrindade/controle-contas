@@ -38,9 +38,8 @@ def login():
             if check_password_hash(user.password, form.password.data):
                 login_user(user)
                 return redirect(url_for("site.index"))
-            else:
-                flash("Senha inválida")
-                return redirect(url_for("site.login"))
+            flash("Senha inválida")
+            return redirect(url_for("site.login"))
         else:
             flash("Usuário inválido")
             return redirect(url_for("site.login"))
@@ -79,6 +78,13 @@ def dashboard():
     return redirect(url_for("site.index"))
 
 
+@site.route("/entries", methods=["GET", "POST"])
+@login_required
+def entries():
+    entries = Entry.query.filter_by(id_user=current_user.id)
+    return render_template("entries/entries.html", entries=entries)
+
+
 @site.route("/add-entries", methods=["GET", "POST"])
 @login_required
 def add_entries():
@@ -93,11 +99,60 @@ def add_entries():
             quantum=form.quantum.data,
             id_source=form.id_source.data,
             revenue=form.revenue.data,
+            id_user=current_user.id,
         )
         current_app.db.session.add(entry)
         current_app.db.session.commit()
         return redirect(url_for("site.add_entries"))
-    return render_template("entries/entries.html", form=form)
+    return render_template("entries/form_entries.html", form=form)
+
+
+@site.route("/edit-entries/<int:pk>", methods=["GET", "POST"])
+@login_required
+def edit_entries(pk):
+    sources = Source.query.filter(Source.id_user == current_user.id).all()
+    sources_list = [(s.id, s.description) for s in sources]
+    query = Entry.query.filter(Entry.id == pk)
+    form = EntriesForm(request.form)
+
+    if request.method == "GET":
+        form.description.data = query.first().description
+        form.value.data = query.first().value
+        form.quantum.data = query.first().quantum
+        form.id_source.choices = sources_list
+        form.revenue.data = query.first().revenue
+
+    if request.method == "POST":  # and form.validate_on_submit():
+
+        query.update(
+            {
+                "description": form.description.data,
+                "value": form.value.data,
+                "quantum": form.quantum.data,
+                "id_source": form.id_source.data,
+                "revenue": form.revenue.data,
+                "id_user": current_user.id,
+            }
+        )
+        current_app.db.session.commit()
+        return jsonify({"msg": "ok"})
+    return render_template(
+        "entries/form_update_entries.html", form=form, pk=query.first().id
+    )
+
+
+@site.route("/del-entries/<int:pk>", methods=["GET"])
+@login_required
+def del_entries(pk):
+    query = Entry.query.filter(Entry.id == pk)
+    if query.first():
+        query.delete()
+        current_app.db.session.commit()
+        return jsonify({"msg": "ok"})
+    return jsonify({"error": "registro não encontrado"})
+
+
+# SOURCES
 
 
 @site.route("/add-sources", methods=["GET", "POST"])
@@ -119,12 +174,13 @@ def add_sources():
 @site.route("/edit-sources/<int:pk>", methods=["GET", "POST"])
 @login_required
 def edit_sources(pk):
-
     query = Source.query.filter(Source.id == pk)
     form = SourcesForm(request.form)
-    form.description.data = query.first().description
 
-    if request.method == "POST" and form.validate_on_submit():
+    if request.method == "GET":
+        form.description.data = query.first().description
+
+    elif request.method == "POST" and form.validate_on_submit():
         query.update({"description": form.description.data})
         current_app.db.session.commit()
         return jsonify({"msg": "ok"})
@@ -148,7 +204,7 @@ def del_sources(pk):
 @login_required
 def sources():
 
-    source = Source.query.all()
+    source = Source.query.filter(Source.id_user == current_user.id).all()
     return render_template("sources/sources.html", source=source)
 
 
