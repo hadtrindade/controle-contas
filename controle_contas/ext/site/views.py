@@ -5,15 +5,16 @@ from flask import (
     url_for,
     request,
     current_app,
-    flash,
+    jsonify,
 )
+from flask.helpers import flash
 from flask_login import login_user, logout_user, login_required, current_user
 from controle_contas.ext.admin.forms import LoginForm
 from controle_contas.ext.site.forms import (
     RegisterForm,
     EntriesForm,
     SourcesForm,
-    InvoiceForm,
+    #    InvoiceForm,
 )
 from controle_contas.ext.auth.models import User
 from controle_contas.ext.db.models import Entry, Source
@@ -31,19 +32,20 @@ def index():
 @site.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm(request.form)
-
     if request.method == "POST" and form.validate_on_submit():
         user = form.get_user()
         if user:
-            if not user and not check_password_hash(
-                user.password, form.password
-            ):
-                flash("Usuário ou senha inválidos!!!")
-            login_user(user)
-
+            if check_password_hash(user.password, form.password.data):
+                login_user(user)
+                return redirect(url_for("site.index"))
+            else:
+                flash("Senha inválida")
+                return redirect(url_for("site.login"))
+        else:
+            flash("Usuário inválido")
+            return redirect(url_for("site.login"))
     if current_user.is_authenticated:
         return redirect(url_for("site.index"))
-
     return render_template("login.html", form=form)
 
 
@@ -95,7 +97,7 @@ def add_entries():
         current_app.db.session.add(entry)
         current_app.db.session.commit()
         return redirect(url_for("site.add_entries"))
-    return render_template("entries.html", form=form)
+    return render_template("entries/entries.html", form=form)
 
 
 @site.route("/add-sources", methods=["GET", "POST"])
@@ -110,8 +112,44 @@ def add_sources():
         )
         current_app.db.session.add(source)
         current_app.db.session.commit()
-        return redirect(url_for("site.add_sources"))
-    return render_template("sources.html", form=form)
+        return jsonify({"msg": "ok"})
+    return render_template("sources/form_add_sources.html", form=form)
+
+
+@site.route("/edit-sources/<int:pk>", methods=["GET", "POST"])
+@login_required
+def edit_sources(pk):
+
+    query = Source.query.filter(Source.id == pk)
+    form = SourcesForm(request.form)
+    form.description.data = query.first().description
+
+    if request.method == "POST" and form.validate_on_submit():
+        query.update({"description": form.description.data})
+        current_app.db.session.commit()
+        return jsonify({"msg": "ok"})
+    return render_template(
+        "sources/form_update_sources.html", form=form, pk=query.first().id
+    )
+
+
+@site.route("/del-sources/<int:pk>", methods=["GET"])
+@login_required
+def del_sources(pk):
+    query = Source.query.filter(Source.id == pk)
+    if query.first():
+        query.delete()
+        current_app.db.session.commit()
+        return jsonify({"msg": "ok"})
+    return jsonify({"error": "registro não encontrado"})
+
+
+@site.route("/sources", methods=["GET", "POST"])
+@login_required
+def sources():
+
+    source = Source.query.all()
+    return render_template("sources/sources.html", source=source)
 
 
 @site.route("/generate-invoice")

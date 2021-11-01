@@ -9,3 +9,8 @@ body,
         height: 100%;
         background: #ebe9e9 !important;
     }
+
+
+div#id_body {
+    background-color: #fff;
+}
