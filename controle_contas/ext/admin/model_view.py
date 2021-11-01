@@ -13,7 +13,7 @@ class UserModelView(ModelView):
     page_size = 50
     can_view_details = True
     column_filters = ["username", "admin"]
-    column_exclude_list = ["passwd", "created_at", "updated_at"]
+    column_exclude_list = ["password", "created_at", "updated_at"]
     column_searchable_list = ["username", "email"]
     column_editable_list = ["username", "email"]
     create_modal = True
@@ -64,20 +64,25 @@ class CeAdminIndexView(AdminIndexView):
     def login_view(self):
 
         form = LoginForm(request.form)
-
+        self._template_args["form"] = form
         if request.method == "POST" and form.validate_on_submit():
             user = form.get_user()
-            if user and user.is_staff:
-                if not user and not check_password_hash(
-                    user.password, form.password
-                ):
-                    flash("Usuário ou senha inválidos!!!")
-                login_user(user)
+            if user:
+                if not user.is_staff:
+                    flash("Usuário não é um ADM!!!")
+                    return redirect(url_for(".login_view"))
+                if check_password_hash(user.password, form.password.data):
+                    login_user(user)
+                    return redirect(url_for(".index"))
+                else:
+                    flash("Senha inválida!!!")
+                    return redirect(url_for(".login_view"))
+            else:
+                flash("Usuário inválido!!!")
+                return redirect(url_for(".login_view"))
 
         if current_user.is_authenticated:
             return redirect(url_for(".index"))
-
-        self._template_args["form"] = form
         return super(CeAdminIndexView, self).index()
 
     @expose("/logout/")

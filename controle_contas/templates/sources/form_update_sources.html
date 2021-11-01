@@ -1,0 +1,15 @@
+<form method="POST" action="" id="formEdit" onsubmit="submitEditForm(pk='{{ pk }}')">
+    <div class="modal-body">
+        {{ form.hidden_tag() if form.hidden_tag }}
+        {% for f in form if f.type != 'CSRFTokenField' %}
+            <div class="form-group">
+            {{ f.label(class="form-label") }}
+            {{ f(class="form-control") }}
+            </div>
+        {% endfor %}
+    </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="buttonCloseEdit">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+    </div>
+</form>  
