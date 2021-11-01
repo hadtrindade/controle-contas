@@ -15,6 +15,7 @@ def test_para_inserir_entry_de_testes(client, token):
         "value": 10,
         "quantum": 1,
         "id_source": 1,
+        "id_user": 1,
         "revenue": "true",
     }
     response = client.post(
@@ -30,6 +31,7 @@ def test_para_inserir_lista_entries(client, token):
             "value": 102,
             "quantum": 13,
             "id_source": 14,
+            "id_user": 1,
             "revenue": "true",
         },
         {
@@ -37,6 +39,7 @@ def test_para_inserir_lista_entries(client, token):
             "value": 105,
             "quantum": 12,
             "id_source": 13,
+            "id_user": 1,
             "revenue": "false",
         },
     ]
@@ -57,6 +60,7 @@ def test_com_payload_invalido_não_deve_adicionar_uma_entries(client, token):
         "value": "a",
         "quantum": 1,
         "id_source": 1,
+        "id_user": 1,
         "revenue": "true",
     }
     response = client.post(
@@ -76,6 +80,7 @@ def test_update_entry(client, token):
         "value": 10,
         "quantum": 1,
         "id_source": 1,
+        "id_user": 1,
         "revenue": "true",
     }
     response = client.put(
@@ -90,6 +95,7 @@ def test_update_de_entries_deve_falhar_status_code_404(client, token):
         "value": 10,
         "quantum": 1,
         "id_source": 1,
+        "id_user": 1,
         "revenue": "true",
     }
     response = client.put(

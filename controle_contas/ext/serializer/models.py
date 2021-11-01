@@ -49,5 +49,6 @@ class EntrySchema(ma.SQLAlchemySchema):
     quantum = fields.Integer()
     created_at = fields.DateTime()
     updated_at = fields.DateTime()
-    id_source = fields.Integer()
+    id_source = fields.Integer(required=True)
+    id_user = fields.Integer(required=True)
     revenue = fields.Boolean()

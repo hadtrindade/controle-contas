@@ -74,9 +74,8 @@ class CeAdminIndexView(AdminIndexView):
                 if check_password_hash(user.password, form.password.data):
                     login_user(user)
                     return redirect(url_for(".index"))
-                else:
-                    flash("Senha inválida!!!")
-                    return redirect(url_for(".login_view"))
+                flash("Senha inválida!!!")
+                return redirect(url_for(".login_view"))
             else:
                 flash("Usuário inválido!!!")
                 return redirect(url_for(".login_view"))
