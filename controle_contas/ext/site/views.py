@@ -1,5 +1,6 @@
 from flask import (
     Blueprint,
+    json,
     render_template,
     redirect,
     url_for,
@@ -9,16 +10,23 @@ from flask import (
 )
 from flask.helpers import flash
 from flask_login import login_user, logout_user, login_required, current_user
+from sqlalchemy.sql.expression import true
 from controle_contas.ext.admin.forms import LoginForm
 from controle_contas.ext.site.forms import (
     RegisterForm,
     EntriesForm,
     SourcesForm,
-    #    InvoiceForm,
 )
 from controle_contas.ext.auth.models import User
-from controle_contas.ext.db.models import Entry, Source
+from controle_contas.ext.db.models import (
+    Entry,
+    Invoice,
+    Source,
+    DetailedInvoice,
+)
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import desc
+from dateutil.relativedelta import relativedelta
 
 
 site = Blueprint("site", __name__)
@@ -208,10 +216,126 @@ def sources():
     return render_template("sources/sources.html", source=source)
 
 
-@site.route("/generate-invoice")
+# INVOICES
+
+
+def generate_full_invoice():
+    detailed_invoice = {}
+    entries = (
+        Entry.query.filter_by(id_user=current_user.id)
+        .order_by(desc(Entry.created_at))
+        .all()
+    )
+    for e in entries:
+        for x in range(e.quantum):
+            date_m_y = e.updated_at + relativedelta(months=x)
+            key = date_m_y.date().strftime("%m/%y")
+            if key in detailed_invoice.keys():
+                detailed_invoice[key]["details"].append(
+                    {
+                        "description": e.description,
+                        "value": e.value,
+                        "revenue": e.revenue,
+                    }
+                )
+                if e.revenue:
+                    detailed_invoice[key]["total_revenue"] += e.value
+                else:
+                    detailed_invoice[key]["total"] += e.value
+            else:
+                if e.revenue:
+                    detailed_invoice[key] = {
+                        "details": [
+                            {
+                                "description": e.description,
+                                "value": e.value,
+                                "revenue": e.revenue,
+                            }
+                        ],
+                        "total": 0,
+                        "total_revenue": e.value,
+                    }
+                else:
+                    detailed_invoice[key] = {
+                        "details": [
+                            {
+                                "description": e.description,
+                                "value": e.value,
+                                "revenue": e.revenue,
+                            }
+                        ],
+                        "total": e.value,
+                        "total_revenue": 0,
+                    }
+
+    return detailed_invoice
+
+
+@site.route("/invoices")
 @login_required
-def generate_invoice():
-    return redirect(url_for("site.index"))
+def get_invoices():
+
+    invoices = Invoice.query.filter_by(id_user=current_user.id).all()
+    return render_template(
+        "invoices/invoice.html",
+        invoices=invoices,
+    )
+
+
+@site.route("/invoices-details/<int:pk>", methods=["GET"])
+@login_required
+def get_datails(pk):
+    details = DetailedInvoice.query.filter_by(id_invoice=pk).all()
+    return render_template(
+        "invoices/details.html",
+        details=details,
+    )
+
+
+@site.route("/del-invoices/<int:pk>", methods=["GET"])
+@login_required
+def del_invoices(pk):
+    query = Invoice.query.filter_by(id=pk)
+    if query.one_or_none():
+        query.delete()
+        current_app.db.session.commit()
+        return jsonify({"msg": "ok"})
+    return jsonify({"error": "registro não encontrado"})
+
+
+
+@site.route("/generate-invoices", methods=["GET"])
+@login_required
+def generate_invoices():
+
+    detailed_invoice = generate_full_invoice()
+    DetailedInvoice.query.delete()
+    Invoice.query.delete()
+    current_app.db.session.commit()
+
+    data_invoices = []
+    for k, v in detailed_invoice.items():
+        
+        data = {
+            "description": k,
+            "total": float(v["total"]),
+            "total_revenue": float(v["total_revenue"]),
+            "id_user": current_user.id,
+        }
+        data_invoices.append(Invoice(**data))
+    current_app.db.session.add_all(data_invoices)
+    current_app.db.session.commit()
+
+    query_invoices = Invoice.query.filter_by(id_user=current_user.id).all()
+    data_detailed_invoice = []
+    for i in query_invoices:
+        for j in detailed_invoice[i.description]["details"]:
+            j["id_invoice"] = i.id
+            data_detailed_invoice.append(DetailedInvoice(**j))
+    current_app.db.session.add_all(data_detailed_invoice)
+    current_app.db.session.commit()
+
+    return redirect(url_for("site.get_invoices"))
 
 
 def init_app(app):

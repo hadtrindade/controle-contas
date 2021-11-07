@@ -23,6 +23,7 @@ class RegisterForm(FlaskForm):
     email = EmailField(
         "Email address", [validators.DataRequired(), validators.Email()]
     )
+
     password = PasswordField(
         "Senha",
         [
@@ -38,12 +39,14 @@ class EntriesForm(FlaskForm):
     description = fields.StringField(
         "Descrição", validators=[validators.DataRequired()]
     )
-    value = DecimalField("Valor", validators=[validators.DataRequired()])
+    value = DecimalField(
+        "Valor", places=2, validators=[validators.DataRequired()]
+    )
     quantum = IntegerField("Parcela", validators=[validators.DataRequired()])
     id_source = SelectField(
         "Origem", coerce=int, validators=[validators.DataRequired()]
     )
-    revenue = BooleanField("Receita?")
+    revenue = BooleanField("Receita?", false_values=(False, "false", ""))
 
 
 class SourcesForm(FlaskForm):

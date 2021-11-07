@@ -1,15 +1,21 @@
 <form method="POST" action="" id="formEdit" onsubmit="submitEditFormEntries(pk='{{ pk }}')">
     <div class="modal-body">
         {{ form.hidden_tag() if form.hidden_tag }}
-        {% for f in form if f.type != 'CSRFTokenField' %}
-            <div class="form-group">
-            {{ f.label(class="form-label") }}
-            {{ f(class="form-control") }}
+        {% for field in form if field.type != 'CSRFTokenField' %}
+            {% if field.type == "BooleanField" %}
+            <div class="form-check">
+                {{ field(class="form-check-input") }} {{ field.label(class="form-check-label", for="revenue") }}
             </div>
+            {% else %}
+                <div class="form-group">
+                    {{ field.label(class="form-label") }}
+                    {{ field(class="form-control") }}
+                </div>
+            {% endif %}
         {% endfor %}
     </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="buttonCloseEdit">Fechar</button>
             <button type="submit" class="btn btn-primary">Salvar</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="buttonCloseEdit">Fechar</button>
     </div>
 </form>  

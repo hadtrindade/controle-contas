@@ -1,75 +1,62 @@
 {% extends  'base.html' %}
 
-{% block title %} Controle de Contas - Origens {% endblock title %}
+{% block title %} Controle de Contas - Faturas {% endblock title %}
 
 
 {% block body %}
 
 <div class="container mt-2" id="id_body">
-    <button type="button" class="btn btn-primary mt-2 mb-2" data-toggle="modal" data-target="#createSources " id="buttonCreate" onclick="getFormCreate()"">
-        Criar Origem
-    </button>
-   <!-- Modal create-->
-   <div class="modal fade" id="createSources" tabindex="-1" role="dialog" aria-labelledby="createSourcesTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h5 class="modal-title" id="createSourcesTitle">Criar</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        </div>
-        <form method="POST" action="" id="formCreate" onsubmit="createSource()">
-            <div id="modalCreateForm">
-                modal body
-            </div>
+    <a href="{{ url_for( 'site.generate_invoices' ) }}" class="btn btn-primary mt-2 mb-2" title="Gerar Faturas">
+        <i class="fa fa-pencil" aria-hidden="true">Gerar Faturas</i>
+    </a>
+       <!-- Modal Details-->
+    <div class="modal fade" id="detailsInvoices" tabindex="-1" role="dialog" aria-labelledby="detailsInvoicesTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsInvoicesTitle">Detalhes</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalDetail">
+                    ...
+                </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="buttonCloseCreate">Fechar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-            </div>
-        </form>    
-    </div>
-    </div>
-</div>
-    <!-- Modal edit-->
-    <div class="modal fade" id="editSources" tabindex="-1" role="dialog" aria-labelledby="editSourcesTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="editSourcesTitle">Criar</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div id="modalEditForm">
-                modal edit body
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="buttonDetailsInvoices">Fechar</button>
+                </div>
             </div>
         </div>
-        </div>
     </div>
- 
+
     <div class="table-responsive mb-2">
-        <table class="table table-sm table-hover" id="id_table_sources">
+        <table class="table table-sm table-hover" id="tableInvoices">
             <thead>
                 <tr>
-                    <th scope="col">Ordem</th>
-                    <th scope="col">Decrição</th>
-                    <th scope="col">Editar/Remover</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Total Despesas</th>
+                    <th scope="col">Total Receitas</th>
+                    <th scope="col">Saldo</th>
+                    <th scope="col">Detalhes</th>
+                    <th scope="col">Remover</th>
                 </tr>
             </thead>
             <tbody>
-                {% for fields in source %}
+                {% for field in invoices %}
                 <tr>
-                    <th scope="row">{{ fields.id }}</th>
-                    <td>{{ fields.description }}</td>
+                    <td>{{ field.description }}</td>
+                    <td>{{ field.total }}</td>
+                    <td>{{ field.total_revenue }}</td>
+                    <td>{{ field.total_revenue - field.total }}</td>
                     <td>
-                        <button type="button" class="btn btn-warning mt-2 mb-2" data-toggle="modal" data-target="#editSources " id="buttonEdit{{ fields.id }}" onclick="getFormEdit(pk='{{ fields.id }}')">
-                            Atualizar
+                        <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#detailsInvoices " id="buttonDetailsInvoices{{ field.id }}" onclick="getDetailsInvoices(pk='{{ field.id }}')">
+                            Detalhes
                         </button>
-                        <button type="button" class="btn btn-danger mt-2 mb-2" id="buttonDel{{ fields.id }}" onclick="delItem(pk='{{ fields.id }}')">
-                            Delete
-                        </button>
-                        
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" id="buttonDel{{ field.id }}" onclick="delInvoices(pk='{{ field.id }}')">
+                            Apagar
+                        </button>            
                     </td>
                 </tr>
                 {% endfor %}  
@@ -82,8 +69,9 @@
 {% block scripts %}
 
 <script>
+
     $(document).ready(function() {
-        $('#id_table_sources').DataTable({
+        $('#tableInvoices').DataTable({
     responsive: true,
     // "bSort": false,
     "aaSorting": [],

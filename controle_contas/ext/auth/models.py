@@ -4,7 +4,8 @@ from werkzeug.security import check_password_hash
 
 
 class User(db.Model):
-    __tablename__ = "User"
+    __tablename__ = "user"
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(
         "username", db.String(100), unique=True, nullable=False
@@ -16,6 +17,9 @@ class User(db.Model):
     admin = db.Column("admin", db.Boolean, default=False)
     created_at = db.Column("created_at", db.DateTime, default=datetime.now())
     updated_at = db.Column("updated_at", db.DateTime)
+    source = db.relationship("Source", backref="user", lazy=True)
+    entry = db.relationship("Entry", backref="user", lazy=True)
+    invoice = db.relationship("Invoice", backref="user", lazy=True)
 
     @property
     def is_authenticated(self):

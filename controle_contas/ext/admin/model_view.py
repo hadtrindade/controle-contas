@@ -53,6 +53,20 @@ class EntryModelView(ModelView):
         return current_user.is_authenticated
 
 
+class InvoiceModelView(ModelView):
+    form_base_class = SecureForm
+    page_size = 50
+    can_view_details = True
+    create_modal = True
+    edit_modal = True
+    column_searchable_list = ["id_user", "description"]
+    column_filters = ["id_user", "description"]
+    can_export = True
+
+    def is_accessible(self):
+        return current_user.is_authenticated
+
+
 class CeAdminIndexView(AdminIndexView):
     @expose("/")
     def index(self):

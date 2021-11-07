@@ -110,6 +110,14 @@ function createEntries(){
     let idSource = document.querySelector("#id_source")
     let revenue = document.querySelector("#revenue")
 
+    if (revenue.checked){
+        revenue.value = "y"
+        console.log(revenue.value)
+    }else{
+        revenue.value = ""
+        console.log(revenue.value)
+    }
+
     let formData = new FormData()
 
     formData.append("csrf_token", csrfToken.value)
@@ -124,7 +132,7 @@ function createEntries(){
         credentials: "include",
         body: formData
     })
-    .then(response => {response.json()
+    .then(response => {response.text()
     .then(data => console.log(data))
     document.location.reload(true)
         })
@@ -155,6 +163,14 @@ function submitEditFormEntries(pk=0){
     let quantum = document.querySelector("#quantum")
     let idSource = document.querySelector("#id_source")
     let revenue = document.querySelector("#revenue")
+
+    if (revenue.checked){
+        revenue.value = "y"
+        console.log(revenue.value)
+    }else{
+        revenue.value = ""
+        console.log(revenue.value)
+    }
 
     let formData = new FormData()
 
@@ -192,3 +208,34 @@ function delEntry(pk=0){
     .catch(e => console.log("deu ruim"))
 }
 
+// Invoices
+
+
+function getDetailsInvoices(pk=0){
+
+    let modalBody = document.querySelector("#modalDetail")
+
+    fetch(`invoices-details/${pk}`, {
+        method: "GET",
+        credentials: "include",
+    })
+    .then(response => {response.text()
+    .then( data => modalBody.innerHTML = data)
+    })
+    .catch(e => console.log("deu ruim"))
+}
+
+
+
+function delInvoices(pk=0){
+    fetch(`del-invoices/${pk}`, {
+        method: "GET",
+        credentials: "include",
+    })
+    .then(response => {
+        response.json()
+        .then( data => console.log(data))
+        document.location.reload(true)
+    })
+    .catch(e => console.log("deu ruim"))
+}

@@ -1,6 +1,6 @@
 {% extends  'base.html' %}
 
-{% block title %} Controle de Contas - Origens {% endblock title %}
+{% block title %} Controle de Contas - Entradas {% endblock title %}
 
 
 {% block body %}
@@ -21,22 +21,22 @@
         </div>
         <form method="POST" action="" id="formCreate" onsubmit="createEntries()">
             <div id="modalCreateForm">
-                modal body
+                ...
             </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="buttonCloseCreate">Fechar</button>
                     <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="buttonCloseCreate">Fechar</button>
             </div>
         </form>    
     </div>
     </div>
 </div>
     <!-- Modal edit-->
-    <div class="modal fade" id="editSources" tabindex="-1" role="dialog" aria-labelledby="editSourcesTitle" aria-hidden="true">
+    <div class="modal fade" id="editEntries" tabindex="-1" role="dialog" aria-labelledby="editEntriesTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="editSourcesTitle">Criar</h5>
+            <h5 class="modal-title" id="editEntriesTitle">Atualizar</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -52,8 +52,7 @@
         <table class="table table-sm table-hover" id="table_entries">
             <thead>
                 <tr>
-                    <th scope="col">Ordem</th>
-                    <th scope="col">Decrição</th>
+                    <th scope="col">Descrição</th>
                     <th scope="col">Valor</th>
                     <th scope="col">Vezes</th>
                     <th scope="col">Receita</th>
@@ -64,7 +63,6 @@
             <tbody>
                 {% for fields in entries %}
                 <tr>
-                    <th scope="row">{{ fields.id }}</th>
                     <td>{{ fields.description }}</td>
                     <td>{{ fields.value }}</td>
                     <td>{{ fields.quantum }}</td>
@@ -75,13 +73,12 @@
                     {% endif %}
                     <td>{{ fields.source.description }}</td>
                     <td>
-                        <button type="button" class="btn btn-warning mt-2 mb-2" data-toggle="modal" data-target="#editSources " id="buttonEdit{{ fields.id }}" onclick="getFormEditEntries(pk='{{ fields.id }}')">
+                        <button type="button" class="btn btn-warning mt-2 mb-2" data-toggle="modal" data-target="#editEntries " id="buttonEdit{{ fields.id }}" onclick="getFormEditEntries(pk='{{ fields.id }}')">
                             Atualizar
                         </button>
                         <button type="button" class="btn btn-danger mt-2 mb-2" id="buttonDel{{ fields.id }}" onclick="delEntry(pk='{{ fields.id }}')">
-                            Delete
+                            Apagar
                         </button>
-                        
                     </td>
                 </tr>
                 {% endfor %}  

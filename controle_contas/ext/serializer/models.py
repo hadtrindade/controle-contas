@@ -1,7 +1,7 @@
 from controle_contas.ext.serializer import ma
 from marshmallow import fields
 from controle_contas.ext.auth.models import User
-from controle_contas.ext.db.models import Source, Entry
+from controle_contas.ext.db.models import Source, Entry, Invoice
 
 
 class SourceSchema(ma.SQLAlchemySchema):
@@ -52,3 +52,17 @@ class EntrySchema(ma.SQLAlchemySchema):
     id_source = fields.Integer(required=True)
     id_user = fields.Integer(required=True)
     revenue = fields.Boolean()
+
+
+class InvoiceSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Invoice
+        load_instance = True
+
+    id = fields.Integer()
+    description = fields.String(required=True)
+    total = fields.Decimal(required=True)
+    id_user = fields.Integer(required=True)
+
+    def __repr__(self) -> str:
+        return self.description

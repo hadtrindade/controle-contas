@@ -1,0 +1,18 @@
+<div class="table-responsive mb-2">
+    <table class="table table-sm table-hover" id="tableDetailInvoice">
+        <thead>
+            <tr>
+                <th scope="col">Descrição</th>
+                <th scope="col">Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for field in details %}
+            <tr>
+                <td>{{ field.description }}</td>
+                <td>{{ field.value }}</td>
+            </tr>
+            {% endfor %}  
+        </tbody>
+    </table>
+</div>
