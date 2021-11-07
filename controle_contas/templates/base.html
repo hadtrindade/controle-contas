@@ -32,11 +32,11 @@
             {% if current_user.is_authenticated %}
                 {% if current_user.is_staff %}
                 <li class="nav-item">
-                <a class="nav-link active"  href="{{ url_for( 'site.generate_invoice' ) }}">Faturas</a>
+                <a class="nav-link active"  href="{{ url_for( 'site.get_invoices' ) }}">Faturas</a>
                 </li>
                 {% endif %}
                 <li class="nav-item">
-                <a class="nav-link active" href="{{ url_for( 'site.add_entries' ) }}">Entradas</a>
+                <a class="nav-link active" href="{{ url_for( 'site.entries' ) }}">Entradas</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" href="{{ url_for( 'site.sources' ) }}">Fontes</a>

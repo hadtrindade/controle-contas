@@ -1,0 +1,108 @@
+{% extends  'base.html' %}
+
+{% block title %} Controle de Contas - Faturas {% endblock title %}
+
+
+{% block body %}
+
+<div class="container mt-2" id="id_body">
+    <a href="{{ url_for( 'site.generate_invoices' ) }}" class="btn btn-primary mt-2 mb-2" title="Gerar Faturas">
+        <i class="fa fa-pencil" aria-hidden="true">Gerar Faturas</i>
+    </a>
+       <!-- Modal Details-->
+    <div class="modal fade" id="detailsInvoices" tabindex="-1" role="dialog" aria-labelledby="detailsInvoicesTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsInvoicesTitle">Detalhes</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalDetail">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="buttonDetailsInvoices">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive mb-2">
+        <table class="table table-sm table-hover" id="tableInvoices">
+            <thead>
+                <tr>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Total Despesas</th>
+                    <th scope="col">Total Receitas</th>
+                    <th scope="col">Saldo</th>
+                    <th scope="col">Detalhes</th>
+                    <th scope="col">Remover</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for field in invoices %}
+                <tr>
+                    <td>{{ field.description }}</td>
+                    <td>{{ field.total }}</td>
+                    <td>{{ field.total_revenue }}</td>
+                    <td>{{ field.total_revenue - field.total }}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#detailsInvoices " id="buttonDetailsInvoices{{ field.id }}" onclick="getDetailsInvoices(pk='{{ field.id }}')">
+                            Detalhes
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" id="buttonDel{{ field.id }}" onclick="delInvoices(pk='{{ field.id }}')">
+                            Apagar
+                        </button>            
+                    </td>
+                </tr>
+                {% endfor %}  
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock body %}
+
+{% block scripts %}
+
+<script>
+
+    $(document).ready(function() {
+        $('#tableInvoices').DataTable({
+    responsive: true,
+    // "bSort": false,
+    "aaSorting": [],
+    "pageLength": 50,
+    "language": {
+        "decimal": "",
+        "emptyTable": "Sem dados disponíveis",
+        "info": "Mostrando de _START_ até _END_ de _TOTAL_ registos",
+        "infoEmpty": "Mostrando de 0 até 0 de 0 registos",
+        "infoFiltered": "(filtrado de _MAX_ registos no total)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ registos",
+        "loadingRecords": "A carregar dados...",
+        "processing": "A processar...",
+        "search": "Procurar:",
+        "zeroRecords": "Não foram encontrados resultados",
+        "paginate": {
+            "first": "Primeiro",
+            "last": "Último",
+            "next": "Seguinte",
+            "previous": "Anterior"
+        },
+        "aria": {
+            "sortAscending": ": ordem crescente",
+            "sortDescending": ": ordem decrescente"
+        }
+    }
+});
+        } );
+</script>
+
+
+{% endblock scripts %}

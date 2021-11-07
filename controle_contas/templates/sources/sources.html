@@ -7,42 +7,42 @@
 
 <div class="container mt-2" id="id_body">
     <button type="button" class="btn btn-primary mt-2 mb-2" data-toggle="modal" data-target="#createSources " id="buttonCreate" onclick="getFormCreate()"">
-        Criar Origem
+        Criar Fonte
     </button>
    <!-- Modal create-->
    <div class="modal fade" id="createSources" tabindex="-1" role="dialog" aria-labelledby="createSourcesTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h5 class="modal-title" id="createSourcesTitle">Criar</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+        <div class="modal-dialog modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createSourcesTitle">Criar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST" action="" id="formCreate" onsubmit="createSource()">
+                    <div id="modalCreateForm">
+                        ...
+                    </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="buttonCloseCreate">Fechar</button>
+                    </div>
+                </form>    
+            </div>
         </div>
-        <form method="POST" action="" id="formCreate" onsubmit="createSource()">
-            <div id="modalCreateForm">
-                modal body
-            </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="buttonCloseCreate">Fechar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-            </div>
-        </form>    
     </div>
-    </div>
-</div>
     <!-- Modal edit-->
     <div class="modal fade" id="editSources" tabindex="-1" role="dialog" aria-labelledby="editSourcesTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="editSourcesTitle">Criar</h5>
+            <h5 class="modal-title" id="editSourcesTitle">Atualizar</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
             </div>
             <div id="modalEditForm">
-                modal edit body
+                ...
             </div>
         </div>
         </div>
@@ -52,24 +52,21 @@
         <table class="table table-sm table-hover" id="id_table_sources">
             <thead>
                 <tr>
-                    <th scope="col">Ordem</th>
-                    <th scope="col">Decrição</th>
+                    <th scope="col">Descrição</th>
                     <th scope="col">Editar/Remover</th>
                 </tr>
             </thead>
             <tbody>
                 {% for fields in source %}
                 <tr>
-                    <th scope="row">{{ fields.id }}</th>
                     <td>{{ fields.description }}</td>
                     <td>
                         <button type="button" class="btn btn-warning mt-2 mb-2" data-toggle="modal" data-target="#editSources " id="buttonEdit{{ fields.id }}" onclick="getFormEdit(pk='{{ fields.id }}')">
                             Atualizar
                         </button>
                         <button type="button" class="btn btn-danger mt-2 mb-2" id="buttonDel{{ fields.id }}" onclick="delItem(pk='{{ fields.id }}')">
-                            Delete
+                            Apagar
                         </button>
-                        
                     </td>
                 </tr>
                 {% endfor %}  
@@ -80,97 +77,6 @@
 {% endblock body %}
 
 {% block scripts %}
-<script>
-
-function getFormCreate(){
-    let modalBody = document.querySelector("#modalCreateForm")
-
-    fetch("add-sources", {
-        method: "GET",
-        credentials: "include",
-        })
-    .then(response => {response.text()
-    .then(data => modalBody.innerHTML = data)})
-    .catch(e => console.log("deu ruim"))
-}
-
-function createSource(){
-
-    let csrfToken = document.querySelector("#csrf_token")
-    let description = document.querySelector("#description")
-
-    let formData = new FormData()
-
-    formData.append("csrf_token", csrfToken.value)
-    formData.append("description", description.value)
-
-    fetch("add-sources", {
-        method: "POST",
-        credentials: "include",
-        body: formData
-    })
-    .then(response => {response.json()
-    .then(data => console.log(data))
-    document.location.reload(true)
-        })
-    .catch(e => console.log("deu ruim"))
-}
-
-</script>
-
-<script>
-
-function getFormEdit(pk=0){
-    let modal = document.querySelector("#editSources")
-    let modalBody = document.querySelector("#modalEditForm")
-
-    fetch(`edit-sources/${pk}`, {
-        method: "GET",
-        credentials: "include",
-    })
-    .then(response => {response.text()
-    .then( data => modalBody.innerHTML = data)
-    })
-    .catch(e => console.log("deu ruim"))
-
-}
-
-function submitEditForm(pk=0){
-
-    let csrfToken = document.querySelector("#csrf_token")
-    let description = document.querySelector("#description")
-    let formData = new FormData()
-    formData.append("csrf_token", csrfToken.value)
-    formData.append("description", description.value)
-
-    fetch(`edit-sources/${pk}`, {
-        method: "POST",
-        credentials: "include",
-        body: formData
-    })
-    .then(response => {
-        response.text()
-        .then(data => console.log(data))
-        document.location.reload(true)
-    })
-    .catch(e => console.log("deu ruim"))
-    
-}
-
-function delItem(pk=0){
-    fetch(`del-sources/${pk}`, {
-        method: "GET",
-        credentials: "include",
-    })
-    .then(response => {
-        response.json()
-        .then( data => console.log(data))
-        document.location.reload(true)
-    })
-    .catch(e => console.log("deu ruim"))
-}
-    
-</script>
 
 <script>
     $(document).ready(function() {

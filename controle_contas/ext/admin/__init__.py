@@ -1,11 +1,12 @@
 from flask_admin import Admin
-from controle_contas.ext.db.models import Source, Entry
+from controle_contas.ext.db.models import Source, Entry, Invoice
 from controle_contas.ext.auth.models import User
 from controle_contas.ext.admin.model_view import (
     UserModelView,
     SourceModelView,
     EntryModelView,
     CeAdminIndexView,
+    InvoiceModelView,
 )
 
 
@@ -22,3 +23,4 @@ def init_app(app):
     admin.add_view(SourceModelView(Source, app.db.session))
     admin.add_view(EntryModelView(Entry, app.db.session))
     admin.add_view(UserModelView(User, app.db.session))
+    admin.add_view(InvoiceModelView(Invoice, app.db.session))

@@ -1,31 +1,129 @@
 {% extends  'base.html' %}
-{% block title %} Controle de Contas - Cadastro de Entradas {% endblock title %}
+
+{% block title %} Controle de Contas - Entradas {% endblock title %}
+
+
 {% block body %}
 
-<div class="container h-100">
-    <div class="row h-100 justify-content-center align-items-center">
-        <div class="col-sm-4 col-md-4 col-lg-12 col-xl-12 align-items-center shadow p-3 mb-5 bg-white rounded">
-            <div class="page-header pt-5">
-                <h1 class="text-center">Entradas</h1>
-            </div>
-            <form method="POST" action="">
-                {{ form.hidden_tag() if form.hidden_tag }}
-                {% for f in form if f.type != 'CSRFTokenField' %}
-                    <div class="form-group">
-                    {{ f.label }}<br>
-                    {{ f }}
-                    {% if f.errors %}
-                        <ul>
-                            {% for e in f.errors %}
-                            <li>{{ e }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                    </div>
-                {% endfor %}
-                <button class="btn btn-primary" type="submit">Cadastrar</button>
-            </form>
+<div class="container mt-2" id="id_body">
+    <button type="button" class="btn btn-primary mt-2 mb-2" data-toggle="modal" data-target="#createEntries" id="buttonCreate" onclick="getFormCreateEntry()">
+        Criar Entradas
+    </button>
+   <!-- Modal create-->
+   <div class="modal fade" id="createEntries" tabindex="-1" role="dialog" aria-labelledby="createEntriesTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="createEntriesTitle">Criar</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
         </div>
+        <form method="POST" action="" id="formCreate" onsubmit="createEntries()">
+            <div id="modalCreateForm">
+                ...
+            </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="buttonCloseCreate">Fechar</button>
+            </div>
+        </form>    
+    </div>
+    </div>
+</div>
+    <!-- Modal edit-->
+    <div class="modal fade" id="editEntries" tabindex="-1" role="dialog" aria-labelledby="editEntriesTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="editEntriesTitle">Atualizar</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div id="modalEditForm">
+                ...
+            </div>
+        </div>
+        </div>
+    </div>
+ 
+    <div class="table-responsive mb-2">
+        <table class="table table-sm table-hover" id="table_entries">
+            <thead>
+                <tr>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Valor</th>
+                    <th scope="col">Vezes</th>
+                    <th scope="col">Receita</th>
+                    <th scope="col">Fonte</th>
+                    <th scope="col">Editar/Remover</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fields in entries %}
+                <tr>
+                    <td>{{ fields.description }}</td>
+                    <td>{{ fields.value }}</td>
+                    <td>{{ fields.quantum }}</td>
+                    {% if fields.revenue %}
+                        <td> Sim </td>
+                    {% else %}
+                        <td> Não </td>
+                    {% endif %}
+                    <td>{{ fields.source.description }}</td>
+                    <td>
+                        <button type="button" class="btn btn-warning mt-2 mb-2" data-toggle="modal" data-target="#editEntries " id="buttonEdit{{ fields.id }}" onclick="getFormEditEntries(pk='{{ fields.id }}')">
+                            Atualizar
+                        </button>
+                        <button type="button" class="btn btn-danger mt-2 mb-2" id="buttonDel{{ fields.id }}" onclick="delEntry(pk='{{ fields.id }}')">
+                            Apagar
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}  
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock body %}
+
+{% block scripts %}
+
+<script>
+    $(document).ready(function() {
+        $('#table_entries').DataTable({
+    responsive: true,
+    // "bSort": false,
+    "aaSorting": [],
+    "pageLength": 50,
+    "language": {
+        "decimal": "",
+        "emptyTable": "Sem dados disponíveis",
+        "info": "Mostrando de _START_ até _END_ de _TOTAL_ registos",
+        "infoEmpty": "Mostrando de 0 até 0 de 0 registos",
+        "infoFiltered": "(filtrado de _MAX_ registos no total)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ registos",
+        "loadingRecords": "A carregar dados...",
+        "processing": "A processar...",
+        "search": "Procurar:",
+        "zeroRecords": "Não foram encontrados resultados",
+        "paginate": {
+            "first": "Primeiro",
+            "last": "Último",
+            "next": "Seguinte",
+            "previous": "Anterior"
+        },
+        "aria": {
+            "sortAscending": ": ordem crescente",
+            "sortDescending": ": ordem decrescente"
+        }
+    }
+});
+        } );
+</script>
+
+
+{% endblock scripts %}

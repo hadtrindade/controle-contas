@@ -152,7 +152,7 @@ cython_debug/
 ### Flask ###
 instance/*
 !instance/.gitignore
-/migrations
+
 
 controle_contas.db
 ### Flask.Python Stack ###
@@ -285,3 +285,4 @@ controle_contas.db
 
 # End of https://www.toptal.com/developers/gitignore/api/python,flask,django
 .DS_Store
+ajuda.py
