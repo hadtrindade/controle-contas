@@ -3,7 +3,7 @@
 {% block title %} Controle de Contas - Faturas {% endblock title %}
 
 
-{% block body %}
+{% block contents %}
 
 <div class="container mt-2" id="id_body">
     <a href="{{ url_for( 'site.generate_invoices' ) }}" class="btn btn-primary mt-2 mb-2" title="Gerar Faturas">
@@ -15,15 +15,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="detailsInvoicesTitle">Detalhes</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <div class="modal-body" id="modalDetail">
                     ...
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="buttonDetailsInvoices">Fechar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="buttonDetailsInvoices">Fechar</button>
                 </div>
             </div>
         </div>
@@ -49,7 +48,7 @@
                     <td>{{ field.total_revenue }}</td>
                     <td>{{ field.total_revenue - field.total }}</td>
                     <td>
-                        <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#detailsInvoices " id="buttonDetailsInvoices{{ field.id }}" onclick="getDetailsInvoices(pk='{{ field.id }}')">
+                        <button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#detailsInvoices " id="buttonDetailsInvoices{{ field.id }}" onclick="getDetailsInvoices(pk='{{ field.id }}')">
                             Detalhes
                         </button>
                     </td>
@@ -64,10 +63,10 @@
         </table>
     </div>
 </div>
-{% endblock body %}
+{% endblock contents %}
+
 
 {% block scripts %}
-
 <script>
 
     $(document).ready(function() {
@@ -103,6 +102,5 @@
 });
         } );
 </script>
-
 
 {% endblock scripts %}

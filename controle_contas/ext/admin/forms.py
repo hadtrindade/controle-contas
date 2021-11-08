@@ -5,8 +5,14 @@ from flask import current_app
 
 
 class LoginForm(FlaskForm):
-    username = fields.StringField(validators=[validators.DataRequired()])
-    password = fields.PasswordField(validators=[validators.DataRequired()])
+    username = fields.StringField(
+        validators=[validators.DataRequired()],
+        render_kw={"placeholder": "Username"},
+    )
+    password = fields.PasswordField(
+        validators=[validators.DataRequired()],
+        render_kw={"placeholder": "Password"},
+    )
 
     def get_user(self):
         return (

@@ -1,6 +1,5 @@
 from flask import (
     Blueprint,
-    json,
     render_template,
     redirect,
     url_for,
@@ -45,14 +44,14 @@ def login():
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return redirect(url_for("site.index"))
+                return redirect(url_for("site.dashboard"))
             flash("Senha inválida")
             return redirect(url_for("site.login"))
         else:
             flash("Usuário inválido")
             return redirect(url_for("site.login"))
     if current_user.is_authenticated:
-        return redirect(url_for("site.index"))
+        return redirect(url_for("site.dashboard"))
     return render_template("login.html", form=form)
 
 
@@ -83,7 +82,7 @@ def logout():
 @site.route("/dashboard")
 @login_required
 def dashboard():
-    return redirect(url_for("site.index"))
+    return render_template("dashboard.html")
 
 
 @site.route("/entries", methods=["GET", "POST"])
@@ -289,6 +288,9 @@ def get_datails(pk):
     return render_template(
         "invoices/details.html",
         details=details,
+        total=details[0].invoice.total,
+        total_revenue=details[0].invoice.total_revenue,
+        balance=(details[0].invoice.total_revenue - details[0].invoice.total),
     )
 
 
@@ -303,7 +305,6 @@ def del_invoices(pk):
     return jsonify({"error": "registro não encontrado"})
 
 
-
 @site.route("/generate-invoices", methods=["GET"])
 @login_required
 def generate_invoices():
@@ -315,7 +316,7 @@ def generate_invoices():
 
     data_invoices = []
     for k, v in detailed_invoice.items():
-        
+
         data = {
             "description": k,
             "total": float(v["total"]),
