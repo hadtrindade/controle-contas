@@ -1,13 +1,13 @@
 {% extends  'base.html' %}
 
-{% block title %} Controle de Contas - Entradas {% endblock title %}
+{% block title %} Controle de Contas - Lançamentos {% endblock title %}
 
 
-{% block body %}
+{% block contents %}
 
 <div class="container mt-2" id="id_body">
-    <button type="button" class="btn btn-primary mt-2 mb-2" data-toggle="modal" data-target="#createEntries" id="buttonCreate" onclick="getFormCreateEntry()">
-        Criar Entradas
+    <button type="button" class="btn btn-primary mt-2 mb-2" data-bs-toggle="modal" data-bs-target="#createEntries" id="buttonCreate" onclick="getFormCreateEntry()">
+        Criar Lançamento
     </button>
    <!-- Modal create-->
    <div class="modal fade" id="createEntries" tabindex="-1" role="dialog" aria-labelledby="createEntriesTitle" aria-hidden="true">
@@ -15,8 +15,8 @@
     <div class="modal-content">
         <div class="modal-header">
         <h5 class="modal-title" id="createEntriesTitle">Criar</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            
         </button>
         </div>
         <form method="POST" action="" id="formCreate" onsubmit="createEntries()">
@@ -25,7 +25,7 @@
             </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Salvar</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="buttonCloseCreate">Fechar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="buttonCloseCreate">Fechar</button>
             </div>
         </form>    
     </div>
@@ -36,9 +36,8 @@
         <div class="modal-dialog modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="editEntriesTitle">Atualizar</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+            <h5 class="modal-title" id="editEntriesTitle">Alterar</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
             </button>
             </div>
             <div id="modalEditForm">
@@ -56,7 +55,7 @@
                     <th scope="col">Valor</th>
                     <th scope="col">Vezes</th>
                     <th scope="col">Receita</th>
-                    <th scope="col">Fonte</th>
+                    <th scope="col">Origem do Lançamento</th>
                     <th scope="col">Editar/Remover</th>
                 </tr>
             </thead>
@@ -73,8 +72,8 @@
                     {% endif %}
                     <td>{{ fields.source.description }}</td>
                     <td>
-                        <button type="button" class="btn btn-warning mt-2 mb-2" data-toggle="modal" data-target="#editEntries " id="buttonEdit{{ fields.id }}" onclick="getFormEditEntries(pk='{{ fields.id }}')">
-                            Atualizar
+                        <button type="button" class="btn btn-warning mt-2 mb-2" data-bs-toggle="modal" data-bs-target="#editEntries " id="buttonEdit{{ fields.id }}" onclick="getFormEditEntries(pk='{{ fields.id }}')">
+                            Alterar
                         </button>
                         <button type="button" class="btn btn-danger mt-2 mb-2" id="buttonDel{{ fields.id }}" onclick="delEntry(pk='{{ fields.id }}')">
                             Apagar
@@ -86,7 +85,7 @@
         </table>
     </div>
 </div>
-{% endblock body %}
+{% endblock contents %}
 
 {% block scripts %}
 
@@ -124,6 +123,5 @@
 });
         } );
 </script>
-
 
 {% endblock scripts %}

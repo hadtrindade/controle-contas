@@ -1,5 +1,6 @@
 from flask_login import LoginManager
 from controle_contas.ext.auth.models import User
+from flask import redirect, url_for
 
 
 login_manager = LoginManager()
@@ -12,3 +13,7 @@ def init_app(app):
     @login_manager.user_loader
     def load_user(user_id):
         return app.db.session.query(User).get(user_id)
+
+    @login_manager.unauthorized_handler
+    def unauthorized_callback():
+        return redirect(url_for("site.login"))

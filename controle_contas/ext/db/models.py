@@ -1,7 +1,5 @@
 from controle_contas.ext.db import db
-from sqlalchemy.orm import backref
 from datetime import datetime
-
 
 
 class Source(db.Model):
@@ -12,7 +10,9 @@ class Source(db.Model):
     id_user = db.Column(
         "id_user", db.Integer, db.ForeignKey("user.id"), nullable=False
     )
-    entry = db.relationship("Entry", backref="source", lazy=True)
+    entry = db.relationship(
+        "Entry", backref="source", passive_deletes="all", lazy=True
+    )
 
     def __repr__(self) -> str:
         return self.description
@@ -27,7 +27,9 @@ class Entry(db.Model):
     quantum = db.Column("quantum", db.Integer, default=1)
     revenue = db.Column("revenue", db.Boolean, default=False)
     id_user = db.Column("id_user", db.Integer, db.ForeignKey("user.id"))
-    id_source = db.Column("id_source", db.Integer, db.ForeignKey("source.id"))
+    id_source = db.Column(
+        "id_source", db.Integer, db.ForeignKey("source.id", ondelete="CASCADE")
+    )
     created_at = db.Column("created_at", db.DateTime, default=datetime.now())
     updated_at = db.Column("updated_at", db.DateTime, default=datetime.now())
 
@@ -45,7 +47,9 @@ class Invoice(db.Model):
     total = db.Column("total", db.Numeric)
     total_revenue = db.Column("total_revenue", db.Numeric)
     id_user = db.Column("id_user", db.Integer, db.ForeignKey("user.id"))
-    detailed_invoice = db.relationship("DetailedInvoice", backref="invoice", cascade="all, delete-orphan", lazy=True)
+    detailed_invoice = db.relationship(
+        "DetailedInvoice", backref="invoice", passive_deletes="all", lazy=True
+    )
 
     def __repr__(self) -> str:
         return self.description
@@ -59,9 +63,10 @@ class DetailedInvoice(db.Model):
     value = db.Column("value", db.Numeric)
     revenue = db.Column("revenue", db.Boolean)
     id_invoice = db.Column(
-        "id_invoice", db.Integer, db.ForeignKey("invoice.id")
+        "id_invoice",
+        db.Integer,
+        db.ForeignKey("invoice.id", ondelete="CASCADE"),
     )
-
 
     def __repr__(self) -> str:
         return self.description
