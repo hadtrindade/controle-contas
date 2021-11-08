@@ -28,7 +28,7 @@ def app():
     db.session.commit()
 
     yield app
-    #app.db.drop_all()
+    # app.db.drop_all()
 
 
 @pytest.fixture()
