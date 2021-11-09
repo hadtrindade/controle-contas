@@ -60,10 +60,10 @@
                 <tr>
                     <td>{{ fields.description }}</td>
                     <td>
-                        <button type="button" class="btn btn-warning mt-2 mb-2" data-bs-toggle="modal" data-bs-target="#editSources " id="buttonEdit{{ fields.id }}" onclick="getFormEdit(pk='{{ fields.id }}')">
+                        <button type="button" class="btn btn-warning mt-2 mb-2" data-bs-toggle="modal" data-bs-target="#editSources " id="buttonEdit{{ fields.id }}" onclick="getFormEditSource(pk='{{ fields.id }}')">
                             Alterar
                         </button>
-                        <button type="button" class="btn btn-danger mt-2 mb-2" id="buttonDel{{ fields.id }}" onclick="delItem(pk='{{ fields.id }}')">
+                        <button type="button" class="btn btn-danger mt-2 mb-2" id="buttonDel{{ fields.id }}" onclick="delSource(pk='{{ fields.id }}')">
                             Apagar
                         </button>
                     </td>

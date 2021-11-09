@@ -92,6 +92,9 @@ def entries():
     return render_template("entries/entries.html", entries=entries)
 
 
+# Entries
+
+
 @site.route("/add-entries", methods=["GET", "POST"])
 @login_required
 def add_entries():
@@ -110,7 +113,7 @@ def add_entries():
         )
         current_app.db.session.add(entry)
         current_app.db.session.commit()
-        return redirect(url_for("site.add_entries"))
+        return jsonify({"msg": "ok"}), 201
     return render_template("entries/form_entries.html", form=form)
 
 
@@ -119,18 +122,11 @@ def add_entries():
 def edit_entries(pk):
     sources = Source.query.filter(Source.id_user == current_user.id).all()
     sources_list = [(s.id, s.description) for s in sources]
-    query = Entry.query.filter(Entry.id == pk)
-    form = EntriesForm(request.form)
+    query = Entry.query.filter_by(id=pk)
+    form = EntriesForm(obj=query.first())
+    form.id_source.choices = sources_list
 
-    if request.method == "GET":
-        form.description.data = query.first().description
-        form.value.data = query.first().value
-        form.quantum.data = query.first().quantum
-        form.id_source.choices = sources_list
-        form.revenue.data = query.first().revenue
-
-    if request.method == "POST":  # and form.validate_on_submit():
-
+    if request.method == "POST" and form.validate_on_submit():
         query.update(
             {
                 "description": form.description.data,
@@ -142,7 +138,7 @@ def edit_entries(pk):
             }
         )
         current_app.db.session.commit()
-        return jsonify({"msg": "ok"})
+        return jsonify({"msg": "ok"}), 200
     return render_template(
         "entries/form_update_entries.html", form=form, pk=query.first().id
     )
@@ -155,7 +151,7 @@ def del_entries(pk):
     if query.first():
         query.delete()
         current_app.db.session.commit()
-        return jsonify({"msg": "ok"})
+        return jsonify({"msg": "ok"}), 200
     return jsonify({"error": "registro não encontrado"})
 
 
@@ -174,7 +170,7 @@ def add_sources():
         )
         current_app.db.session.add(source)
         current_app.db.session.commit()
-        return jsonify({"msg": "ok"})
+        return jsonify({"msg": "ok"}), 201
     return render_template("sources/form_add_sources.html", form=form)
 
 
@@ -182,15 +178,12 @@ def add_sources():
 @login_required
 def edit_sources(pk):
     query = Source.query.filter(Source.id == pk)
-    form = SourcesForm(request.form)
+    form = SourcesForm(obj=query.first())
 
-    if request.method == "GET":
-        form.description.data = query.first().description
-
-    elif request.method == "POST" and form.validate_on_submit():
+    if request.method == "POST" and form.validate_on_submit():
         query.update({"description": form.description.data})
         current_app.db.session.commit()
-        return jsonify({"msg": "ok"})
+        return jsonify({"msg": "ok"}), 200
     return render_template(
         "sources/form_update_sources.html", form=form, pk=query.first().id
     )
@@ -203,7 +196,7 @@ def del_sources(pk):
     if query.first():
         query.delete()
         current_app.db.session.commit()
-        return jsonify({"msg": "ok"})
+        return jsonify({"msg": "ok"}), 200
     return jsonify({"error": "registro não encontrado"})
 
 
@@ -270,7 +263,7 @@ def generate_full_invoice():
     return detailed_invoice
 
 
-@site.route("/invoices")
+@site.route("/invoices", methods=["GET"])
 @login_required
 def get_invoices():
 
@@ -301,7 +294,7 @@ def del_invoices(pk):
     if query.one_or_none():
         query.delete()
         current_app.db.session.commit()
-        return jsonify({"msg": "ok"})
+        return jsonify({"msg": "ok"}), 200
     return jsonify({"error": "registro não encontrado"})
 
 

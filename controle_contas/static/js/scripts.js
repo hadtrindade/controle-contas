@@ -1,6 +1,7 @@
 // JS Sources
 
 function getFormCreate(){
+
     let modalBody = document.querySelector("#modalCreateForm")
 
     fetch("add-sources", {
@@ -9,18 +10,13 @@ function getFormCreate(){
         })
     .then(response => {response.text()
     .then(data => modalBody.innerHTML = data)})
-    .catch(e => console.log("deu ruim"))
+    .catch(e => console.log(e))
 }
 
 function createSource(){
 
-    let csrfToken = document.querySelector("#csrf_token")
-    let description = document.querySelector("#description")
-
-    let formData = new FormData()
-
-    formData.append("csrf_token", csrfToken.value)
-    formData.append("description", description.value)
+    let form = document.querySelector("#formCreate")
+    let formData = new FormData(form)
 
     fetch("add-sources", {
         method: "POST",
@@ -31,12 +27,12 @@ function createSource(){
     .then(data => console.log(data))
     document.location.reload(true)
         })
-    .catch(e => console.log("deu ruim"))
+    .catch(e => console.log(e))
 }
 
 
-function getFormEdit(pk=0){
-    let modal = document.querySelector("#editSources")
+function getFormEditSource(pk=0){
+    
     let modalBody = document.querySelector("#modalEditForm")
 
     fetch(`edit-sources/${pk}`, {
@@ -46,18 +42,14 @@ function getFormEdit(pk=0){
     .then(response => {response.text()
     .then( data => modalBody.innerHTML = data)
     })
-    .catch(e => console.log("deu ruim"))
+    .catch(e => console.log(e))
 
 }
 
-function submitEditForm(pk=0){
+function submitFormEditSource(pk=0){
 
-    let csrfToken = document.querySelector("#csrf_token")
-    let description = document.querySelector("#description")
-    let formData = new FormData()
-    formData.append("csrf_token", csrfToken.value)
-    formData.append("description", description.value)
-    console.log(description.value)
+    let form = document.querySelector("#formEditSource")    
+    let formData = new FormData(form)
 
     fetch(`edit-sources/${pk}`, {
         method: "POST",
@@ -65,15 +57,15 @@ function submitEditForm(pk=0){
         body: formData
     })
     .then(response => {
-        response.text()
+        response.json()
         .then(data => console.log(data))
         document.location.reload(true)
     })
-    .catch(e => console.log("deu ruim"))
+    .catch(e => console.log(e))
     
 }
 
-function delItem(pk=0){
+function delSource(pk=0){
     fetch(`del-sources/${pk}`, {
         method: "GET",
         credentials: "include",
@@ -83,7 +75,7 @@ function delItem(pk=0){
         .then( data => console.log(data))
         document.location.reload(true)
     })
-    .catch(e => console.log("deu ruim"))
+    .catch(e => console.log(e))
 }
     
 // JS Entry
@@ -97,51 +89,29 @@ function getFormCreateEntry(){
         })
     .then(response => {response.text()
     .then(data => modalBody.innerHTML = data)})
-    .catch(e => console.log("deu ruim"))
+    .catch(e => console.log(e))
 }
 
 function createEntries(){
 
-
-    let csrfToken = document.querySelector("#csrf_token")
-    let description = document.querySelector("#description")
-    let value = document.querySelector("#value")
-    let quantum = document.querySelector("#quantum")
-    let idSource = document.querySelector("#id_source")
-    let revenue = document.querySelector("#revenue")
-
-    if (revenue.checked){
-        revenue.value = "y"
-        console.log(revenue.value)
-    }else{
-        revenue.value = ""
-        console.log(revenue.value)
-    }
-
-    let formData = new FormData()
-
-    formData.append("csrf_token", csrfToken.value)
-    formData.append("description", description.value)
-    formData.append("value", value.value)
-    formData.append("quantum", quantum.value)
-    formData.append("id_source", idSource.value)
-    formData.append("revenue", revenue.value)
+    let form = document.querySelector("#formCreateEntries")
+    let formData = new FormData(form)
 
     fetch("add-entries", {
         method: "POST",
         credentials: "include",
         body: formData
     })
-    .then(response => {response.text()
+    .then(response => {response.json()
     .then(data => console.log(data))
     document.location.reload(true)
         })
-    .catch(e => console.log("deu ruim"))
+    .catch(e => console.log(e))
 }
 
 
 function getFormEditEntries(pk=0){
-    let modal = document.querySelector("#editEntries")
+    
     let modalBody = document.querySelector("#modalEditForm")
 
     fetch(`edit-entries/${pk}`, {
@@ -151,35 +121,14 @@ function getFormEditEntries(pk=0){
     .then(response => {response.text()
     .then( data => modalBody.innerHTML = data)
     })
-    .catch(e => console.log("deu ruim"))
+    .catch(e => console.log(e))
 
 }
 
 function submitEditFormEntries(pk=0){
 
-    let csrfToken = document.querySelector("#csrf_token")
-    let description = document.querySelector("#description")
-    let value = document.querySelector("#value")
-    let quantum = document.querySelector("#quantum")
-    let idSource = document.querySelector("#id_source")
-    let revenue = document.querySelector("#revenue")
-
-    if (revenue.checked){
-        revenue.value = "y"
-        console.log(revenue.value)
-    }else{
-        revenue.value = ""
-        console.log(revenue.value)
-    }
-
-    let formData = new FormData()
-
-    formData.append("csrf_token", csrfToken.value)
-    formData.append("description", description.value)
-    formData.append("value", value.value)
-    formData.append("quantum", quantum.value)
-    formData.append("id_source", idSource.value)
-    formData.append("revenue", revenue.value)
+    let form = document.querySelector("#formEditEntries")
+    let formData = new FormData(form)
 
     fetch(`edit-entries/${pk}`, {
         method: "POST",
@@ -187,12 +136,11 @@ function submitEditFormEntries(pk=0){
         body: formData
     })
     .then(response => {
-        response.text()
+        response.json()
         .then(data => console.log(data))
         document.location.reload(true)
     })
-    .catch(e => console.log("deu ruim"))
-    
+    .catch(e => console.log(e))
 }
 
 function delEntry(pk=0){
@@ -205,7 +153,7 @@ function delEntry(pk=0){
         .then( data => console.log(data))
         document.location.reload(true)
     })
-    .catch(e => console.log("deu ruim"))
+    .catch(e => console.log(e))
 }
 
 // Invoices
@@ -222,9 +170,8 @@ function getDetailsInvoices(pk=0){
     .then(response => {response.text()
     .then( data => modalBody.innerHTML = data)
     })
-    .catch(e => console.log("deu ruim"))
+    .catch(e => console.log(e))
 }
-
 
 
 function delInvoices(pk=0){
@@ -237,5 +184,5 @@ function delInvoices(pk=0){
         .then( data => console.log(data))
         document.location.reload(true)
     })
-    .catch(e => console.log("deu ruim"))
+    .catch(e => console.log(e))
 }
