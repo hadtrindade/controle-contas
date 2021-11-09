@@ -1,4 +1,4 @@
-<form method="POST" action="" id="formEdit" onsubmit="submitEditForm(pk='{{ pk }}')">
+<form method="POST" action="" id="formEditSource" onsubmit="submitFormEditSource(pk='{{ pk }}')">
     <div class="modal-body">
         {{ form.hidden_tag() if form.hidden_tag }}
         {% for f in form if f.type != 'CSRFTokenField' %}
