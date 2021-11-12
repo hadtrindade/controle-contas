@@ -22,7 +22,7 @@ class UserModelView(ModelView):
     can_export = True
 
     def is_accessible(self):
-        return current_user.is_authenticated
+        return current_user.is_staff
 
 
 class SourceModelView(ModelView):
@@ -36,7 +36,7 @@ class SourceModelView(ModelView):
     can_export = True
 
     def is_accessible(self):
-        return current_user.is_authenticated
+        return current_user.is_staff
 
 
 class EntryModelView(ModelView):
@@ -50,7 +50,7 @@ class EntryModelView(ModelView):
     can_export = True
 
     def is_accessible(self):
-        return current_user.is_authenticated
+        return current_user.is_staff
 
 
 class InvoiceModelView(ModelView):
@@ -64,7 +64,7 @@ class InvoiceModelView(ModelView):
     can_export = True
 
     def is_accessible(self):
-        return current_user.is_authenticated
+        return current_user.is_staff
 
 
 class CeAdminIndexView(AdminIndexView):
@@ -72,7 +72,9 @@ class CeAdminIndexView(AdminIndexView):
     def index(self):
         if not current_user.is_authenticated:
             return redirect(url_for(".login_view"))
-        return super(CeAdminIndexView, self).index()
+        if current_user.is_staff:
+            return super(CeAdminIndexView, self).index()
+        return redirect(url_for("site.index"))
 
     @expose("/login/", methods=(["GET", "POST"]))
     def login_view(self):
@@ -94,7 +96,7 @@ class CeAdminIndexView(AdminIndexView):
                 flash("Usuário inválido!!!")
                 return redirect(url_for(".login_view"))
 
-        if current_user.is_authenticated:
+        if current_user.is_authenticated and current_user.is_staff:
             return redirect(url_for(".index"))
         return super(CeAdminIndexView, self).index()
 
