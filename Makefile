@@ -2,9 +2,11 @@ run:
 	FLASK_APP=controle_contas/app.py FLASK_ENV=development flask run
 
 test: 
+	flask drop-db
 	pytest -s -v --cov=controle_contas
 	
-test-cov-report: 
+test-cov-report:
+	flask drop-db
 	pytest -s -v --cov=controle_contas --cov-report=html
 
 black:
