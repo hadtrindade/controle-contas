@@ -198,8 +198,7 @@ def del_user(pk):
         query.delete()
         current_app.db.session.commit()
         return UserSchema().jsonify({"msg": "deleted"}), 200
-    else:
-        return UserSchema().jsonify({"msg": "Forbidden"}), 403
+    return UserSchema().jsonify({"msg": "Forbidden"}), 403
 
 
 @api.route("/api/v1/users/<int:pk>", methods=["PUT"])
@@ -218,8 +217,7 @@ def update_user(pk):
         query.update(data)
         current_app.db.session.commit()
         return user_schema.jsonify(data), 200
-    else:
-        return UserSchema().jsonify({"msg": "Forbidden"}), 403
+    return UserSchema().jsonify({"msg": "Forbidden"}), 403
 
 
 @api.route("/api/v1/users", methods=["POST"])
