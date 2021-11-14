@@ -4,71 +4,159 @@
 
 
 {% block contents %}
-<main>
-
-    <section class="py-5 text-center container">
-      <div class="row py-lg-5">
-        <div class="col-lg-6 col-md-8 mx-auto">
-          <h1 class="fw-light">Vou fazer um Dashboard</h1>
-          <p class="lead text-muted"> VAI FICAR BEM MEIA BOCA</p>
+<div class="container mt-2 mb-2" id="containerDashboard">
+  <header id="headerDashboard">
+    <div class="container">
+      <div class="row rowHeader">
+        <div class="col selectorInvoices shadow title">
+          {{ form.hidden_tag() if form.hidden_tag }}
+          {% for field in form if field.type != 'CSRFTokenField' %}
+              {{ field.label(class="form-label") }}
+              {{ field(class="form-select") }}
+          {% endfor %}
         </div>
       </div>
-    </section>
-  
-    <div class="album py-5 bg-light">
-      <div class="container">
-  
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+      <div class="row rowHeader">
+        <div class="col buttonDashboard shadow" id="invoice">
+          <p class="title">Fatura</p>
+          <p class="value valueOutgoing">{{ total }}</p>
+        </div>
+        <div class="col buttonDashboard shadow" id="balance">
+          <p class="title">Saldo</p>
+          {% if balance > 0 %}
+            <p class="balancePositive value">{{ balance }}</p>
+          {% else %}
+            <p class="valueOutgoing value">{{ balance }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </header>
+  <main id="mainDashboard" class="shadow">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <p class="title"">Resumo</p>
+        </div>
+        <div class="row">
           <div class="col">
-            <div class="card shadow-sm">
-              <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-  
-              <div class="card-body">
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                  </div>
-                  <small class="text-muted">9 mins</small>
-                </div>
-              </div>
-            </div>
+            <table class="table table-sm table-hover" id="tableDetailInvoice">
+              <thead>
+                  <tr>
+                      <th scope="col">Descrição</th>
+                      <th scope="col">Valor</th>
+                  </tr>
+              </thead>
+              <tbody>
+                {% for field in details %}
+                {% if field.revenue %}
+                    <tr>
+                        <td>{{ field.description }}</td>
+                        <td class="valueRevenue">{{ field.value }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>{{ field.description }}</td>
+                        <td class="valueOutgoing">{{ field.value }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+          </table>           
           </div>
-          <div class="col">
-            <div class="card shadow-sm">
-              <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-  
-              <div class="card-body">
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                  </div>
-                  <small class="text-muted">9 mins</small>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card shadow-sm">
-              <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-  
-              <div class="card-body">
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                <div class="d-flex justify-content-between align-items-center">
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                  </div>
-                  <small class="text-muted">9 mins</small>
-                </div>
-              </div>
-            </div>
-          </div>  
+        </div>
+      </div>
+      <div class="row">
+        
+      </div>
+    </div>
   </main>
+  <aside id="asideDashboard"></aside>
+</div>
 
+<style>
+  #containerDashboard {
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+
+    display: grid;
+    grid-template-rows: 20vh 80vh;
+    row-gap: 20px;
+    grid-template-areas: "header"
+                         "main";
+  }
+  #headerDashboard {
+    border-radius: 5px;
+    grid-area: header;
+  
+  }
+  #mainDashboard {
+    background: #fff;
+    grid-area: main;
+    
+  }
+.rowHeader {
+
+  margin-top: 10px;
+  margin-right: 20px;
+  
+}
+.buttonDashboard {
+  background: #fff;
+  
+  max-width: 220px;
+  border-radius: 5px;
+  margin-right: 10px;
+  min-height: 100px;
+}
+
+.selectorInvoices {
+  background: #fff;
+  max-width: 220px;
+  border-radius: 5px;
+  min-height: 100px;
+}
+
+.title {
+  text-align: left;
+  vertical-align: text-top;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+.value {
+
+  text-align: right;
+  vertical-align: text-bottom;
+}
+
+.valueOutgoing{
+  color:red;
+}
+
+.valueRevenue{
+  color: blue;
+}
+
+.balancePositive {
+  color: green;
+}
+
+</style>
 
 {% endblock contents %}
 
+{% block scripts %}
+
+<script>
+let select = document.querySelector("#invoices")
+
+select.addEventListener("change", function(){
+  document.location.href = `${select.value.replace("/", "-")}`
+})
+
+</script>
+
+
+{% endblock scripts %}
