@@ -41,9 +41,7 @@ class Invoice(db.Model):
     __tablename__ = "invoice"
 
     id = db.Column("id", db.Integer, primary_key=True)
-    description = db.Column(
-        "description", db.String(100), nullable=False, unique=True
-    )
+    description = db.Column("description", db.String(100), nullable=False)
     total = db.Column("total", db.Numeric)
     total_revenue = db.Column("total_revenue", db.Numeric)
     id_user = db.Column("id_user", db.Integer, db.ForeignKey("user.id"))
