@@ -8,20 +8,22 @@
   <header id="headerDashboard">
     <div class="container">
       <div class="row rowHeader">
-        <div class="col selectorInvoices shadow title">
+        <div class="col-2 buttonDashboardSelector shadow">
           {{ form.hidden_tag() if form.hidden_tag }}
           {% for field in form if field.type != 'CSRFTokenField' %}
-              {{ field.label(class="form-label") }}
+              {{ field.label(class="form-label title",) }}
               {{ field(class="form-select") }}
           {% endfor %}
         </div>
-      </div>
-      <div class="row rowHeader">
-        <div class="col buttonDashboard shadow" id="invoice">
-          <p class="title">Fatura</p>
+        <div class="col-2 buttonDashboard shadow" id="invoice">
+          <p class="title">Despesas</p>
           <p class="value valueOutgoing">{{ total }}</p>
         </div>
-        <div class="col buttonDashboard shadow" id="balance">
+        <div class="col-2 buttonDashboard shadow" id="invoice">
+          <p class="title">Receitas</p>
+          <p class="value valueRevenue">{{ total_revenue }}</p>
+        </div>
+        <div class="col-2 buttonDashboard shadow" id="balance">
           <p class="title">Saldo</p>
           {% if balance > 0 %}
             <p class="balancePositive value">{{ balance }}</p>
@@ -81,47 +83,41 @@
     box-sizing: border-box;
 
     display: grid;
-    grid-template-rows: 20vh 80vh;
+    grid-template-columns: 1fr;
     row-gap: 20px;
     grid-template-areas: "header"
                          "main";
   }
   #headerDashboard {
+    
     border-radius: 5px;
     grid-area: header;
+    
   
   }
   #mainDashboard {
+    border-radius: 5px;
     background: #fff;
     grid-area: main;
     
   }
-.rowHeader {
 
-  margin-top: 10px;
-  margin-right: 20px;
-  
-}
 .buttonDashboard {
-  background: #fff;
   
-  max-width: 220px;
+  background: #fff;
   border-radius: 5px;
   margin-right: 10px;
-  min-height: 100px;
 }
 
-.selectorInvoices {
+.buttonDashboardSelector {
   background: #fff;
-  max-width: 220px;
   border-radius: 5px;
-  min-height: 100px;
+  margin-right: 10px;
 }
 
 .title {
   text-align: left;
   vertical-align: text-top;
-  margin-bottom: 30px;
   font-weight: bold;
 }
 
