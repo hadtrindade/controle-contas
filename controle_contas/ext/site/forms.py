@@ -57,4 +57,7 @@ class SourcesForm(FlaskForm):
 
 
 class InvoiceForm(FlaskForm):
-    ...
+
+    invoices = fields.SelectField(
+        "Faturas", coerce=str, validators=[validators.DataRequired()]
+    )
