@@ -6,9 +6,10 @@
 {% block contents %}
 
 <div class="container mt-2" id="id_body">
-    <a href="{{ url_for( 'site.generate_invoices' ) }}" class="btn btn-primary mt-2 mb-2" title="Gerar Faturas">
-        <i class="fa fa-pencil" aria-hidden="true">Gerar Faturas</i>
-    </a>
+    <div class="btn-group mt-2 mb-2" role="group" aria-label="Basic mixed styles example">
+        <a href="{{ url_for( 'site.generate_invoices' ) }}" class="btn btn-primary">Gerar Faturas</a>
+        <a href="{{ url_for( 'site.generate_invoices' ) }}" class="btn btn-success">Atualizar Faturas</a>
+    </div>
        <!-- Modal Details-->
     <div class="modal fade" id="detailsInvoices" tabindex="-1" role="dialog" aria-labelledby="detailsInvoicesTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
