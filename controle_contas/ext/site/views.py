@@ -9,12 +9,12 @@ from flask import (
 )
 from flask.helpers import flash
 from flask_login import login_user, logout_user, login_required, current_user
-from sqlalchemy.sql.expression import true
 from controle_contas.ext.admin.forms import LoginForm
 from controle_contas.ext.site.forms import (
     RegisterForm,
     EntriesForm,
     SourcesForm,
+    InvoiceForm,
 )
 from controle_contas.ext.auth.models import User
 from controle_contas.ext.db.models import (
@@ -26,9 +26,15 @@ from controle_contas.ext.db.models import (
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import desc
 from dateutil.relativedelta import relativedelta
+from datetime import date
 
 
 site = Blueprint("site", __name__)
+
+
+@site.context_processor
+def date_invoice():
+    return dict(date=date.today().strftime("%m-%y"))
 
 
 @site.route("/")
@@ -44,14 +50,20 @@ def login():
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return redirect(url_for("site.dashboard"))
+                return redirect(
+                    url_for(
+                        "site.dashboard", desc=date.today().strftime("%m-%y")
+                    )
+                )
             flash("Senha inválida")
             return redirect(url_for("site.login"))
         else:
             flash("Usuário inválido")
             return redirect(url_for("site.login"))
     if current_user.is_authenticated:
-        return redirect(url_for("site.dashboard"))
+        return redirect(
+            url_for("site.dashboard", desc=date.today().strftime("%m-%y"))
+        )
     return render_template("login.html", form=form)
 
 
@@ -77,12 +89,6 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for("site.index"))
-
-
-@site.route("/dashboard")
-@login_required
-def dashboard():
-    return render_template("dashboard.html")
 
 
 @site.route("/entries", methods=["GET", "POST"])
@@ -303,8 +309,7 @@ def del_invoices(pk):
 def generate_invoices():
 
     detailed_invoice = generate_full_invoice()
-    DetailedInvoice.query.delete()
-    Invoice.query.delete()
+    Invoice.query.filter_by(id_user=current_user.id).delete()
     current_app.db.session.commit()
 
     data_invoices = []
@@ -330,6 +335,41 @@ def generate_invoices():
     current_app.db.session.commit()
 
     return redirect(url_for("site.get_invoices"))
+
+
+@site.route("/dashboard/<desc>")
+@login_required
+def dashboard(desc):
+    month = desc.replace("-", "/")
+    invoice = Invoice.query.filter_by(
+        id_user=current_user.id, description=month
+    ).one_or_none()
+    invoices = Invoice.query.filter_by(id_user=current_user.id).all()
+    invoices_list = [(i.description, i.description) for i in invoices]
+    form = InvoiceForm(request.form)
+    form.invoices.choices = invoices_list
+
+    if invoice:
+        details = DetailedInvoice.query.filter_by(id_invoice=invoice.id).all()
+        return render_template(
+            "dashboard.html",
+            invoice=invoice,
+            form=form,
+            details=details,
+            total=details[0].invoice.total,
+            total_revenue=details[0].invoice.total_revenue,
+            balance=(
+                details[0].invoice.total_revenue - details[0].invoice.total
+            ),
+        )
+    return render_template(
+        "dashboard.html",
+        invoice=invoice,
+        form=form,
+        total=0,
+        total_revenue=0,
+        balance=0,
+    )
 
 
 def init_app(app):

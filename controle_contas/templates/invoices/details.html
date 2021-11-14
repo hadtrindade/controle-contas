@@ -1,6 +1,6 @@
 <div class="table-responsive mb-2">
-    <p> Lançamentos</p>
-    <table class="table table-sm table-hover table-borderless" id="tableDetailInvoice">
+    <p class="title"> Lançamentos</p>
+    <table class="table table-sm table-hover " id="tableDetailInvoice">
         <thead>
             <tr>
                 <th scope="col">Descrição</th>
@@ -10,22 +10,22 @@
         <tbody>
             {% for field in details %}
                 {% if field.revenue %}
-                    <tr class="table-primary">
+                    <tr>
                         <td>{{ field.description }}</td>
-                        <td>{{ field.value }}</td>
+                        <td class="valueRevenue">{{ field.value }}</td>
                     </tr>
                 {% else %}
-                    <tr class="table-danger">
+                    <tr>
                         <td>{{ field.description }}</td>
-                        <td>{{ field.value }}</td>
+                        <td class="value">{{ field.value }}</td>
                     </tr>
                 {% endif %}
             {% endfor %}
         </tbody>
     </table>
 
-    <p>Resumo</p>
-    <table class="table table-sm table-hover table-borderless">
+    <p class="title">Resumo</p>
+    <table class="table table-sm table-hover" id="tableDetailInvoiceTotal">
         <thead>
             <tr>
                 <th scope="col">Total despesa</th>
@@ -35,11 +35,43 @@
         </thead>
         <tbody>
             <tr >
-                <td>{{ total }}</td>
-                <td>{{ total_revenue }}</td>
-                <td>{{ balance }}</td>
+                <td class="value">{{ total }}</td>
+                <td class="valueRevenue">{{ total_revenue }}</td>
+                {% if balance > 0 %}
+                    <td class="balancePositive">{{ balance }}</td>
+                {% else %}
+                    <td class="value">{{ balance }}</td>
+                {% endif %}
+
             </tr>
         </tbody>
     </table>
 
 </div>
+
+
+<style>
+
+.title {
+    text-align: left;
+    vertical-align: text-top;
+    margin-bottom: 30px;
+    font-weight: bold;
+    }
+    
+.value {
+    color:red;
+}
+      
+.valueRevenue{
+    color: blue;
+}
+
+.balancePositive {
+    color: green;
+}
+
+#tableDetailInvoiceTotal {
+    max-width: 500px;
+}
+</style>
