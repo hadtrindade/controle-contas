@@ -348,9 +348,9 @@ def dashboard(desc):
     invoices_list = [(i.description, i.description) for i in invoices]
     form = InvoiceForm(request.form)
     form.invoices.choices = invoices_list
-    form.invoices.data = invoice.description
 
     if invoice:
+        form.invoices.data = invoice.description
         details = DetailedInvoice.query.filter_by(id_invoice=invoice.id).all()
         return render_template(
             "dashboard.html",
