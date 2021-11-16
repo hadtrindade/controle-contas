@@ -17,9 +17,21 @@ class User(db.Model):
     admin = db.Column("admin", db.Boolean, default=False)
     created_at = db.Column("created_at", db.DateTime, default=datetime.now())
     updated_at = db.Column("updated_at", db.DateTime)
-    source = db.relationship("Source", backref="user", lazy=True)
-    entry = db.relationship("Entry", backref="user", lazy=True)
-    invoice = db.relationship("Invoice", backref="user", lazy=True)
+    source = db.relationship(
+        "Source", backref="user", passive_deletes="all", lazy=True
+    )
+    entry = db.relationship(
+        "Entry", backref="user", passive_deletes="all", lazy=True
+    )
+    invoice = db.relationship(
+        "Invoice", backref="user", passive_deletes="all", lazy=True
+    )
+    groups = db.relationship(
+        "Groups", backref="user", passive_deletes="all", lazy=True
+    )
+    wallet = db.relationship(
+        "Wallet", backref="user", passive_deletes="all", lazy=True
+    )
 
     @property
     def is_authenticated(self):
