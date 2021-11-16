@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: c02b85b7c8af
+Revision ID: a19294702054
 Revises: 
-Create Date: 2021-11-11 22:27:44.952936
+Create Date: 2021-11-15 22:53:46.345994
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c02b85b7c8af'
+revision = 'a19294702054'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,21 +32,35 @@ def upgrade():
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
     )
+    op.create_table('Wallet',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('description', sa.String(), nullable=False),
+    sa.Column('value', sa.Numeric(), nullable=True),
+    sa.Column('id_user', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['id_user'], ['user.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('groups',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('description', sa.String(), nullable=False),
+    sa.Column('id_user', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['id_user'], ['user.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('invoice',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('description', sa.String(length=100), nullable=False),
     sa.Column('total', sa.Numeric(), nullable=True),
     sa.Column('total_revenue', sa.Numeric(), nullable=True),
     sa.Column('id_user', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['id_user'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('description')
+    sa.ForeignKeyConstraint(['id_user'], ['user.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('source',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('description', sa.String(length=100), nullable=False),
     sa.Column('id_user', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['id_user'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['id_user'], ['user.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('detailed_invoice',
@@ -66,10 +80,12 @@ def upgrade():
     sa.Column('revenue', sa.Boolean(), nullable=True),
     sa.Column('id_user', sa.Integer(), nullable=True),
     sa.Column('id_source', sa.Integer(), nullable=True),
+    sa.Column('id_group', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['id_group'], ['groups.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['id_source'], ['source.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['id_user'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['id_user'], ['user.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
@@ -81,5 +97,7 @@ def downgrade():
     op.drop_table('detailed_invoice')
     op.drop_table('source')
     op.drop_table('invoice')
+    op.drop_table('groups')
+    op.drop_table('Wallet')
     op.drop_table('user')
     # ### end Alembic commands ###
