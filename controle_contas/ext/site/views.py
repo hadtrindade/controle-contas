@@ -132,7 +132,7 @@ def add_entries():
 @site.route("/edit-entries/<int:pk>", methods=["GET", "POST"])
 @login_required
 def edit_entries(pk):
-    sources = Source.query.filter_by(id_user=current_user.id, id=pk).all()
+    sources = Source.query.filter_by(id_user=current_user.id).all()
     sources_list = [(s.id, s.description) for s in sources]
     groups = Groups.query.filter_by(id_user=current_user.id).all()
     groups_list = [(g.id, g.description) for g in groups]
