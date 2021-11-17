@@ -464,6 +464,7 @@ def dashboard(desc):
     return render_template(
         "dashboard.html",
         invoice=invoice,
+        details={},
         form=form,
         total=0,
         total_revenue=0,
