@@ -29,6 +29,10 @@ migrate:
 	flask db migrate
 	flask db upgrade
 
+
+stamp-head:
+	flask db stamp head 
+
 clean:
 	@find ./ -name '*.pyc' -exec rm -f {} \;
 	@find ./ -name '*~' -exec rm -f {} \;

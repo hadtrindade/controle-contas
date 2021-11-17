@@ -186,3 +186,84 @@ function delInvoices(pk=0){
     })
     .catch(e => console.log(e))
 }
+
+// Groups
+
+
+function getFormCreateGroups(){
+
+    let modalBody = document.querySelector("#modalCreateGroupsForm")
+
+    fetch("add-groups", {
+        method: "GET",
+        credentials: "include",
+        })
+    .then(response => {response.text()
+    .then(data => modalBody.innerHTML = data)})
+    .catch(e => console.log(e))
+}
+
+function createGroups(){
+
+    let form = document.querySelector("#formCreateGroups")
+    let formData = new FormData(form)
+
+    fetch("add-groups", {
+        method: "POST",
+        credentials: "include",
+        body: formData
+    })
+    .then(response => {response.json()
+    .then(data => console.log(data))
+    document.location.reload(true)
+        })
+    .catch(e => console.log(e))
+}
+
+
+function getFormEditGroups(pk=0){
+    
+    let modalBody = document.querySelector("#modalEditGroupsForm")
+
+    fetch(`edit-groups/${pk}`, {
+        method: "GET",
+        credentials: "include",
+    })
+    .then(response => {response.text()
+    .then( data => modalBody.innerHTML = data)
+    })
+    .catch(e => console.log(e))
+
+}
+
+function submitFormEditGroups(pk=0){
+
+    let form = document.querySelector("#formEditGroups")    
+    let formData = new FormData(form)
+
+    fetch(`edit-groups/${pk}`, {
+        method: "POST",
+        credentials: "include",
+        body: formData
+    })
+    .then(response => {
+        response.json()
+        .then(data => console.log(data))
+        document.location.reload(true)
+    })
+    .catch(e => console.log(e))
+    
+}
+
+function delGroups(pk=0){
+    fetch(`del-groups/${pk}`, {
+        method: "GET",
+        credentials: "include",
+    })
+    .then(response => {
+        response.json()
+        .then( data => console.log(data))
+        document.location.reload(true)
+    })
+    .catch(e => console.log(e))
+}

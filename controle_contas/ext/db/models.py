@@ -75,6 +75,11 @@ class DetailedInvoice(db.Model):
         db.Integer,
         db.ForeignKey("invoice.id", ondelete="CASCADE"),
     )
+    id_group = db.Column(
+        "id_group",
+        db.Integer,
+        db.ForeignKey("groups.id", ondelete="CASCADE"),
+    )
 
     def __repr__(self) -> str:
         return self.description
@@ -105,6 +110,9 @@ class Groups(db.Model):
     )
     entry = db.relationship(
         "Entry", backref="groups", passive_deletes="all", lazy=True
+    )
+    detailed_invoice = db.relationship(
+        "DetailedInvoice", backref="groups", passive_deletes="all", lazy=True
     )
 
     def __repr__(self) -> str:

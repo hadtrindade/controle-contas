@@ -1,5 +1,8 @@
+
+
 <div class="table-responsive mb-2">
-    <p class="title"> Lançamentos</p>
+    {% for k, v in details.items() %}
+    <p class="title"> Lançamentos - {{ k }}</p>
     <table class="table table-sm table-hover " id="tableDetailInvoice">
         <thead>
             <tr>
@@ -8,7 +11,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for field in details %}
+            {% for field in v %}
                 {% if field.revenue %}
                     <tr>
                         <td>{{ field.description }}</td>
@@ -23,7 +26,7 @@
             {% endfor %}
         </tbody>
     </table>
-
+    {% endfor %}
     <p class="title">Resumo</p>
     <table class="table table-sm table-hover" id="tableDetailInvoiceTotal">
         <thead>
@@ -46,7 +49,6 @@
             </tr>
         </tbody>
     </table>
-
 </div>
 
 

@@ -30,14 +30,16 @@
                     <ul class="navbar-nav me-auto mb-2 mb-sm-0">
                     {% if current_user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link active"  href="{{ url_for( 'site.get_invoices' ) }}">Faturas</a>
+                            <a class="nav-link active" href="{{ url_for( 'site.groups' ) }}">Grupos</a>
                         </li>
-                        
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ url_for( 'site.sources' ) }}">Origem dos Lançamentos</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link active" href="{{ url_for( 'site.entries' ) }}">Lançamentos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="{{ url_for( 'site.sources' ) }}">Origem dos Lançamentos</a>
+                            <a class="nav-link active"  href="{{ url_for( 'site.get_invoices' ) }}">Faturas</a>
                         </li>
                     {% endif %}
                     </ul>

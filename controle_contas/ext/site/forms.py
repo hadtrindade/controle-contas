@@ -43,6 +43,9 @@ class EntriesForm(FlaskForm):
         "Valor", places=2, validators=[validators.DataRequired()]
     )
     quantum = IntegerField("Parcela", validators=[validators.DataRequired()])
+    id_group = SelectField(
+        "Grupo", coerce=int, validators=[validators.DataRequired()]
+    )
     id_source = SelectField(
         "Origem", coerce=int, validators=[validators.DataRequired()]
     )
@@ -50,6 +53,13 @@ class EntriesForm(FlaskForm):
 
 
 class SourcesForm(FlaskForm):
+
+    description = fields.StringField(
+        "Descrição", validators=[validators.DataRequired()]
+    )
+
+
+class GroupsForm(FlaskForm):
 
     description = fields.StringField(
         "Descrição", validators=[validators.DataRequired()]

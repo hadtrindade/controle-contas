@@ -42,29 +42,32 @@
         </div>
         <div class="row">
           <div class="col">
-            <table class="table table-sm table-hover" id="tableDetailInvoice">
-              <thead>
-                  <tr>
-                      <th scope="col">Descrição</th>
-                      <th scope="col">Valor</th>
-                  </tr>
-              </thead>
-              <tbody>
-                {% for field in details %}
-                {% if field.revenue %}
+            {% for k, v in details.items() %}
+            <p class="title"> Lançamentos - {{ k }}</p>
+            <table class="table table-sm table-hover " id="tableDetailInvoice">
+                <thead>
                     <tr>
-                        <td>{{ field.description }}</td>
-                        <td class="valueRevenue">{{ field.value }}</td>
+                        <th scope="col">Descrição</th>
+                        <th scope="col">Valor</th>
                     </tr>
-                {% else %}
-                    <tr>
-                        <td>{{ field.description }}</td>
-                        <td class="valueOutgoing">{{ field.value }}</td>
-                    </tr>
-                {% endif %}
+                </thead>
+                <tbody>
+                    {% for field in v %}
+                        {% if field.revenue %}
+                            <tr>
+                                <td>{{ field.description }}</td>
+                                <td class="valueRevenue">{{ field.value }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>{{ field.description }}</td>
+                                <td class="valueOutgoing">{{ field.value }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
             {% endfor %}
-            </tbody>
-          </table>           
           </div>
         </div>
       </div>
