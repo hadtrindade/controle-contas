@@ -7,7 +7,6 @@ login_manager = LoginManager()
 
 
 class CCAnonymousUser(AnonymousUserMixin):
-
     @property
     def is_staff(self):
         return False

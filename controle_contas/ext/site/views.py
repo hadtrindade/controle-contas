@@ -15,6 +15,7 @@ from controle_contas.ext.site.forms import (
     EntriesForm,
     SourcesForm,
     InvoiceForm,
+    GroupsForm,
 )
 from controle_contas.ext.auth.models import User
 from controle_contas.ext.db.models import (
@@ -22,6 +23,7 @@ from controle_contas.ext.db.models import (
     Invoice,
     Source,
     DetailedInvoice,
+    Groups,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import desc
@@ -104,9 +106,12 @@ def entries():
 @site.route("/add-entries", methods=["GET", "POST"])
 @login_required
 def add_entries():
-    sources = Source.query.filter(Source.id_user == current_user.id).all()
+    sources = Source.query.filter_by(id_user=current_user.id).all()
     sources_list = [(s.id, s.description) for s in sources]
+    groups = Groups.query.filter_by(id_user=current_user.id).all()
+    groups_list = [(g.id, g.description) for g in groups]
     form = EntriesForm(request.form)
+    form.id_group.choices = groups_list
     form.id_source.choices = sources_list
     if request.method == "POST" and form.validate_on_submit():
         entry = Entry(
@@ -114,6 +119,7 @@ def add_entries():
             value=form.value.data,
             quantum=form.quantum.data,
             id_source=form.id_source.data,
+            id_group=form.id_group.data,
             revenue=form.revenue.data,
             id_user=current_user.id,
         )
@@ -126,10 +132,13 @@ def add_entries():
 @site.route("/edit-entries/<int:pk>", methods=["GET", "POST"])
 @login_required
 def edit_entries(pk):
-    sources = Source.query.filter(Source.id_user == current_user.id).all()
+    sources = Source.query.filter_by(id_user=current_user.id, id=pk).all()
     sources_list = [(s.id, s.description) for s in sources]
+    groups = Groups.query.filter_by(id_user=current_user.id, id=pk).all()
+    groups_list = [(g.id, g.description) for g in groups]
     query = Entry.query.filter_by(id=pk)
     form = EntriesForm(obj=query.first())
+    form.id_group.choices = groups_list
     form.id_source.choices = sources_list
 
     if request.method == "POST" and form.validate_on_submit():
@@ -138,6 +147,7 @@ def edit_entries(pk):
                 "description": form.description.data,
                 "value": form.value.data,
                 "quantum": form.quantum.data,
+                "id_group": form.id_group.data,
                 "id_source": form.id_source.data,
                 "revenue": form.revenue.data,
                 "id_user": current_user.id,
@@ -183,7 +193,7 @@ def add_sources():
 @site.route("/edit-sources/<int:pk>", methods=["GET", "POST"])
 @login_required
 def edit_sources(pk):
-    query = Source.query.filter(Source.id == pk)
+    query = Source.query.filter_by(id=pk, id_user=current_user.id)
     form = SourcesForm(obj=query.first())
 
     if request.method == "POST" and form.validate_on_submit():
@@ -198,7 +208,7 @@ def edit_sources(pk):
 @site.route("/del-sources/<int:pk>", methods=["GET"])
 @login_required
 def del_sources(pk):
-    query = Source.query.filter(Source.id == pk)
+    query = Source.query.filter_by(id=pk, id_user=current_user.id)
     if query.first():
         query.delete()
         current_app.db.session.commit()
@@ -210,8 +220,62 @@ def del_sources(pk):
 @login_required
 def sources():
 
-    source = Source.query.filter(Source.id_user == current_user.id).all()
-    return render_template("sources/sources.html", source=source)
+    query = Source.query.filter_by(id_user=current_user.id).all()
+    return render_template("sources/sources.html", source=query)
+
+
+# Groups
+
+
+@site.route("/groups", methods=["GET", "POST"])
+@login_required
+def groups():
+
+    query = Groups.query.filter_by(id_user=current_user.id).all()
+    print(query)
+    return render_template("groups/groups.html", groups=query)
+
+
+@site.route("/add-groups", methods=["GET", "POST"])
+@login_required
+def add_groups():
+
+    form = GroupsForm(request.form)
+    if request.method == "POST" and form.validate_on_submit():
+        groups = Groups(
+            description=form.description.data,
+            id_user=current_user.id,
+        )
+        current_app.db.session.add(groups)
+        current_app.db.session.commit()
+        return jsonify({"msg": "ok"}), 201
+    return render_template("groups/form_add_groups.html", form=form)
+
+
+@site.route("/del-groups/<int:pk>", methods=["GET"])
+@login_required
+def del_groups(pk):
+    query = Groups.query.filter_by(id=pk, id_user=current_user.id)
+    if query.first():
+        query.delete()
+        current_app.db.session.commit()
+        return jsonify({"msg": "ok"}), 200
+    return jsonify({"erro": "registro não encontrado"})
+
+
+@site.route("/edit-groups/<int:pk>", methods=["GET", "POST"])
+@login_required
+def edit_groups(pk):
+    query = Groups.query.filter_by(id=pk, id_user=current_user.id)
+    form = GroupsForm(obj=query.first())
+
+    if request.method == "POST" and form.validate_on_submit():
+        query.update({"description": form.description.data})
+        current_app.db.session.commit()
+        return jsonify({"msg": "ok"}), 200
+    return render_template(
+        "groups/form_update_groups.html", form=form, pk=query.first().id
+    )
 
 
 # INVOICES
@@ -234,6 +298,7 @@ def generate_full_invoice():
                         "description": e.description,
                         "value": e.value,
                         "revenue": e.revenue,
+                        "id_group": e.id_group,
                     }
                 )
                 if e.revenue:
@@ -248,6 +313,7 @@ def generate_full_invoice():
                                 "description": e.description,
                                 "value": e.value,
                                 "revenue": e.revenue,
+                                "id_group": e.id_group,
                             }
                         ],
                         "total": 0,
@@ -260,6 +326,7 @@ def generate_full_invoice():
                                 "description": e.description,
                                 "value": e.value,
                                 "revenue": e.revenue,
+                                "id_group": e.id_group,
                             }
                         ],
                         "total": e.value,
@@ -283,13 +350,40 @@ def get_invoices():
 @site.route("/invoices-details/<int:pk>", methods=["GET"])
 @login_required
 def get_datails(pk):
-    details = DetailedInvoice.query.filter_by(id_invoice=pk).all()
+    query = DetailedInvoice.query.filter_by(id_invoice=pk).all()
+    details = {}
+    for i in query:
+        if i.groups.description in details.keys():
+            details[i.groups.description].append(i)
+        else:
+            details[i.groups.description] = [i]
     return render_template(
         "invoices/details.html",
         details=details,
-        total=details[0].invoice.total,
-        total_revenue=details[0].invoice.total_revenue,
-        balance=(details[0].invoice.total_revenue - details[0].invoice.total),
+        total=query[0].invoice.total,
+        total_revenue=query[0].invoice.total_revenue,
+        balance=(query[0].invoice.total_revenue - query[0].invoice.total),
+    )
+
+
+@site.route("/invoices-details-group/<int:pk>", methods=["GET"])
+@login_required
+def get_datails_invoice_group(pk):
+    details = DetailedInvoice.query.filter_by(id_group=pk).all()
+    total = 0
+    total_revenue = 0
+    for i in details:
+        if not i.revenue:
+            total += i.value
+        else:
+            total_revenue += i.value
+
+    return render_template(
+        "invoices/details.html",
+        details=details,
+        total=total,
+        total_revenue=total_revenue,
+        balance=(total_revenue - total),
     )
 
 
@@ -351,17 +445,21 @@ def dashboard(desc):
 
     if invoice:
         form.invoices.data = invoice.description
-        details = DetailedInvoice.query.filter_by(id_invoice=invoice.id).all()
+        query = DetailedInvoice.query.filter_by(id_invoice=invoice.id).all()
+        details = {}
+        for i in query:
+            if i.groups.description in details.keys():
+                details[i.groups.description].append(i)
+            else:
+                details[i.groups.description] = [i]
         return render_template(
             "dashboard.html",
             invoice=invoice,
             form=form,
             details=details,
-            total=details[0].invoice.total,
-            total_revenue=details[0].invoice.total_revenue,
-            balance=(
-                details[0].invoice.total_revenue - details[0].invoice.total
-            ),
+            total=query[0].invoice.total,
+            total_revenue=query[0].invoice.total_revenue,
+            balance=(query[0].invoice.total_revenue - query[0].invoice.total),
         )
     return render_template(
         "dashboard.html",

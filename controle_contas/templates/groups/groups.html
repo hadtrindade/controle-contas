@@ -1,0 +1,115 @@
+{% extends  'base.html' %}
+
+{% block title %} Controle de Contas - Grupos {% endblock title %}
+
+
+{% block contents %}
+
+<div class="container mt-2" id="id_body">
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary mt-2 mb-2" data-bs-toggle="modal" data-bs-target="#createGroups" id="buttonCreate" onclick="getFormCreateGroups()">
+        Criar Grupo
+    </button>
+    <!-- Modal -->
+    <div class="modal fade" id="createGroups" tabindex="-1" aria-labelledby="createGroupsLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createGroupsLabel">Criar Grupo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+                <form method="POST" action="" id="formCreateGroups" onsubmit="createGroups()">
+                    <div id="modalCreateGroupsForm">
+                        ...
+                    </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="buttonCloseCreate">Fechar</button>
+                    </div>
+                </form>
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal edit-->
+    <div class="modal fade" id="editGroups" tabindex="-1" role="dialog" aria-labelledby="editGroupsTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="editGroupsTitle">Alterar</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </button>
+            </div>
+            <div id="modalEditGroupsForm">
+                ...
+            </div>
+        </div>
+        </div>
+    </div>
+ 
+    <div class="table-responsive mb-2">
+        <table class="table table-sm table-hover" id="table_groups">
+            <thead>
+                <tr>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Editar/Remover</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fields in groups %}
+                <tr>
+                    <td>{{ fields.description }}</td>
+                    <td>
+                        <button type="button" class="btn btn-warning mt-2 mb-2" data-bs-toggle="modal" data-bs-target="#editGroups" id="buttonEdit{{ fields.id }}" onclick="getFormEditGroups(pk='{{ fields.id }}')">
+                            Alterar
+                        </button>
+                        <button type="button" class="btn btn-danger mt-2 mb-2" id="buttonDel{{ fields.id }}" onclick="delGroups(pk='{{ fields.id }}')">
+                            Apagar
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}  
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock contents %}
+
+{% block scripts %}
+
+<script>
+    $(document).ready(function() {
+        $('#table_groups').DataTable({
+    responsive: true,
+    // "bSort": false,
+    "aaSorting": [],
+    "pageLength": 50,
+    "language": {
+        "decimal": "",
+        "emptyTable": "Sem dados disponíveis",
+        "info": "Mostrando de _START_ até _END_ de _TOTAL_ registos",
+        "infoEmpty": "Mostrando de 0 até 0 de 0 registos",
+        "infoFiltered": "(filtrado de _MAX_ registos no total)",
+        "infoPostFix": "",
+        "thousands": ",",
+        "lengthMenu": "Mostrar _MENU_ registos",
+        "loadingRecords": "A carregar dados...",
+        "processing": "A processar...",
+        "search": "Procurar:",
+        "zeroRecords": "Não foram encontrados resultados",
+        "paginate": {
+            "first": "Primeiro",
+            "last": "Último",
+            "next": "Seguinte",
+            "previous": "Anterior"
+        },
+        "aria": {
+            "sortAscending": ": ordem crescente",
+            "sortDescending": ": ordem decrescente"
+        }
+    }
+});
+        } );
+</script>
+
+{% endblock scripts %}
