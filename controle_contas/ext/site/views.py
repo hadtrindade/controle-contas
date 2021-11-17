@@ -134,7 +134,7 @@ def add_entries():
 def edit_entries(pk):
     sources = Source.query.filter_by(id_user=current_user.id, id=pk).all()
     sources_list = [(s.id, s.description) for s in sources]
-    groups = Groups.query.filter_by(id_user=current_user.id, id=pk).all()
+    groups = Groups.query.filter_by(id_user=current_user.id).all()
     groups_list = [(g.id, g.description) for g in groups]
     query = Entry.query.filter_by(id=pk)
     form = EntriesForm(obj=query.first())
