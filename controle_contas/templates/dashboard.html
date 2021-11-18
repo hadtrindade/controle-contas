@@ -48,6 +48,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Descrição</th>
+                        <th scope="col">Origem</th>
                         <th scope="col">Valor</th>
                     </tr>
                 </thead>
@@ -56,11 +57,13 @@
                         {% if field.revenue %}
                             <tr>
                                 <td>{{ field.description }}</td>
+                                <td>{{ field.source }}</td>
                                 <td class="valueRevenue">{{ field.value }}</td>
                             </tr>
                         {% else %}
                             <tr>
                                 <td>{{ field.description }}</td>
+                                <td>{{ field.source }}</td>
                                 <td class="valueOutgoing">{{ field.value }}</td>
                             </tr>
                         {% endif %}

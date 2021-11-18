@@ -6,7 +6,7 @@ from wtforms import (
     SelectField,
     BooleanField,
 )
-from wtforms.fields.html5 import EmailField, DecimalField, IntegerField
+from wtforms.fields.html5 import EmailField, DecimalField, IntegerField, DateField
 
 
 class RegisterForm(FlaskForm):
@@ -50,6 +50,7 @@ class EntriesForm(FlaskForm):
         "Origem", coerce=int, validators=[validators.DataRequired()]
     )
     revenue = BooleanField("Receita?", false_values=(False, "false", ""))
+    created_at = DateField("Data", validators=[validators.DataRequired()])
 
 
 class SourcesForm(FlaskForm):

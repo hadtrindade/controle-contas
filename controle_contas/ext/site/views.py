@@ -28,7 +28,7 @@ from controle_contas.ext.db.models import (
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import desc
 from dateutil.relativedelta import relativedelta
-from datetime import date
+from datetime import date, datetime
 
 
 site = Blueprint("site", __name__)
@@ -113,6 +113,7 @@ def add_entries():
     form = EntriesForm(request.form)
     form.id_group.choices = groups_list
     form.id_source.choices = sources_list
+    print(form.created_at.data)
     if request.method == "POST" and form.validate_on_submit():
         entry = Entry(
             description=form.description.data,
@@ -122,6 +123,7 @@ def add_entries():
             id_group=form.id_group.data,
             revenue=form.revenue.data,
             id_user=current_user.id,
+            created_at=form.created_at.data,
         )
         current_app.db.session.add(entry)
         current_app.db.session.commit()
@@ -151,6 +153,7 @@ def edit_entries(pk):
                 "id_source": form.id_source.data,
                 "revenue": form.revenue.data,
                 "id_user": current_user.id,
+                "created_at": form.created_at.data,
             }
         )
         current_app.db.session.commit()
@@ -296,6 +299,7 @@ def generate_full_invoice():
                 detailed_invoice[key]["details"].append(
                     {
                         "description": e.description,
+                        "source": e.source.description,
                         "value": e.value,
                         "revenue": e.revenue,
                         "id_group": e.id_group,
@@ -311,6 +315,7 @@ def generate_full_invoice():
                         "details": [
                             {
                                 "description": e.description,
+                                "source": e.source.description,
                                 "value": e.value,
                                 "revenue": e.revenue,
                                 "id_group": e.id_group,
@@ -324,6 +329,7 @@ def generate_full_invoice():
                         "details": [
                             {
                                 "description": e.description,
+                                "source": e.source.description,
                                 "value": e.value,
                                 "revenue": e.revenue,
                                 "id_group": e.id_group,
