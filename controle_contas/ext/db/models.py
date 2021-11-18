@@ -67,8 +67,8 @@ class DetailedInvoice(db.Model):
     __tablename__ = "detailed_invoice"
 
     id = db.Column("id", db.Integer, primary_key=True)
-    description = db.Column("description", db.String(), nullable=False)
-    source = db.Column("source", db.String(), nullable=False)
+    description = db.Column("description", db.String())
+    source = db.Column("source", db.String())
     value = db.Column("value", db.Numeric)
     revenue = db.Column("revenue", db.Boolean)
     id_invoice = db.Column(
