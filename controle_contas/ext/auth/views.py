@@ -1,10 +1,12 @@
+from datetime import datetime, timedelta, timezone
+
 from flask import (
     Blueprint,
-    request,
     jsonify,
-    render_template,
     make_response,
     redirect,
+    render_template,
+    request,
 )
 from flask.helpers import url_for
 from flask_jwt_extended import (
@@ -17,13 +19,12 @@ from flask_jwt_extended import (
     set_refresh_cookies,
     unset_jwt_cookies,
 )
-from controle_contas.ext.auth.models import User
-from controle_contas.ext.serializer.models import UserLoginSchema
 from flask_marshmallow.sqla import ValidationError
-from datetime import datetime, timedelta, timezone
-from controle_contas.ext.jwt import jwt
-from controle_contas.ext.admin.forms import LoginForm
 
+from controle_contas.ext.admin.forms import LoginForm
+from controle_contas.ext.auth.models import User
+from controle_contas.ext.jwt import jwt
+from controle_contas.ext.serializer.models import UserLoginSchema
 
 auth = Blueprint("auth", __name__)
 

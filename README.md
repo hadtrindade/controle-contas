@@ -1,5 +1,5 @@
 # controle-contas
-API para controle de contas pessoais
+App de treinamento.
 
 [![controle-contas](https://github.com/hadtrindade/controle-contas/actions/workflows/controle-contas.yml/badge.svg)](https://github.com/hadtrindade/controle-contas/actions/workflows/controle-contas.yml)
 [![codecov](https://codecov.io/gh/hadtrindade/controle-contas/branch/main/graph/badge.svg?token=61C6H52FIT)](https://codecov.io/gh/hadtrindade/controle-contas)

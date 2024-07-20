@@ -1,11 +1,11 @@
+from flask import flash, redirect, request, url_for
+from flask_admin import AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form import SecureForm
-from flask_admin import AdminIndexView
-from controle_contas.ext.admin.forms import LoginForm
-from flask import url_for, redirect, request, flash
-from flask_admin import expose
 from flask_login import current_user, login_user, logout_user
 from werkzeug.security import check_password_hash
+
+from controle_contas.ext.admin.forms import LoginForm
 
 
 class UserModelView(ModelView):

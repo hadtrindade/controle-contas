@@ -1,35 +1,36 @@
+from datetime import date
+
+from dateutil.relativedelta import relativedelta
 from flask import (
     Blueprint,
-    render_template,
-    redirect,
-    url_for,
-    request,
     current_app,
     jsonify,
+    redirect,
+    render_template,
+    request,
+    url_for,
 )
 from flask.helpers import flash
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import current_user, login_required, login_user, logout_user
+from sqlalchemy import desc
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from controle_contas.ext.admin.forms import LoginForm
-from controle_contas.ext.site.forms import (
-    RegisterForm,
-    EntriesForm,
-    SourcesForm,
-    InvoiceForm,
-    GroupsForm,
-)
 from controle_contas.ext.auth.models import User
 from controle_contas.ext.db.models import (
+    DetailedInvoice,
     Entry,
+    Groups,
     Invoice,
     Source,
-    DetailedInvoice,
-    Groups,
 )
-from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import desc
-from dateutil.relativedelta import relativedelta
-from datetime import date, datetime
-
+from controle_contas.ext.site.forms import (
+    EntriesForm,
+    GroupsForm,
+    InvoiceForm,
+    RegisterForm,
+    SourcesForm,
+)
 
 site = Blueprint("site", __name__)
 

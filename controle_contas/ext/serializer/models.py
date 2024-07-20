@@ -1,7 +1,8 @@
-from controle_contas.ext.serializer import ma
 from marshmallow import fields
+
 from controle_contas.ext.auth.models import User
-from controle_contas.ext.db.models import Source, Entry, Invoice
+from controle_contas.ext.db.models import Entry, Invoice, Source
+from controle_contas.ext.serializer import ma
 
 
 class SourceSchema(ma.SQLAlchemySchema):

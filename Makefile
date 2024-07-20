@@ -1,46 +1,47 @@
+.PHONY: run test docker-build db migrate clean fmt lint
+
+include ./contrib/.env-sample
+
 run:
-	FLASK_APP=controle_contas/app.py FLASK_ENV=development flask run
+	FLASK_DEBUG=true flask run --debug
 
 test: 
-	FLASK_APP=controle_contas/app.py FLASK_ENV=development flask drop-db
-	pytest -s -v --cov=controle_contas
-	
-test-cov-report:
-	FLASK_APP=controle_contas/app.py FLASK_ENV=development flask drop-db
+	FLASK_DEBUG=true flask drop-db
 	pytest -s -v --cov=controle_contas --cov-report=html
 
-black:
-	black -l 79 controle_contas
-	black -l 79 tests
+docker-build:
+	 docker build --pull --rm  -t cc:latest .
 
-prod:
-	gunicorn "controle_contas.app:create_app()" --log-file -
+compose:
+	docker compose up -d
 
 db:
-	sudo docker run -d \
-		--name bd_test \
+	docker run --rm -d \
+		--name db-dev \
 		-e POSTGRES_PASSWORD=postgres \
     	-e PGDATA=/var/lib/postgresql/data/pgdata \
-    	-v /tmp:/var/lib/postgresql/data \
 		-p 5432:5432 \
-    	postgres:13.1
+    	postgres
 
 migrate:
-	flask db migrate
 	flask db upgrade
-
-
-stamp-head:
-	flask db stamp head 
+	flask create-admin-user
 
 clean:
 	@find ./ -name '*.pyc' -exec rm -f {} \;
 	@find ./ -name '*~' -exec rm -f {} \;
 	rm -rf .cache
 	rm -rf .pytest_cache
-	rm -rf build
-	rm -rf dist
 	rm -rf *egg-info
 	rm -rf *tox/
-	rm -rf docs/_build
 	rm -rf tests/.pytest_cache
+
+fmt:
+	@isort --profile=black -m 3 controle_contas tests --line-length=79
+	@black -l 79 controle_contas tests setup.py
+
+lint: fmt
+	@isort --profile=black -m 3 --check --diff --line-length=79 controle_contas tests
+	@black --check --diff --line-length=79 controle_contas tests
+	@flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+	@flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics

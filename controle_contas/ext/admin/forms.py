@@ -1,7 +1,8 @@
+from flask import current_app
 from flask_wtf import FlaskForm
 from wtforms import fields, validators
+
 from controle_contas.ext.auth.models import User
-from flask import current_app
 
 
 class LoginForm(FlaskForm):

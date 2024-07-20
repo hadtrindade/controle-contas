@@ -1,12 +1,17 @@
 from flask_wtf import FlaskForm
 from wtforms import (
-    fields,
-    validators,
+    BooleanField,
     PasswordField,
     SelectField,
-    BooleanField,
+    fields,
+    validators,
 )
-from wtforms.fields.html5 import EmailField, DecimalField, IntegerField, DateField
+from wtforms.fields.html5 import (
+    DateField,
+    DecimalField,
+    EmailField,
+    IntegerField,
+)
 
 
 class RegisterForm(FlaskForm):
