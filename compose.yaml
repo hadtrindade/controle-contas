@@ -1,0 +1,59 @@
+services:
+  app:
+    container_name: "app"
+    depends_on:
+      - db
+      - migrate
+    image: cc:latest
+    command: [ "gunicorn", "controle_contas.app:create_app()", "--log-file", "-", "--bind", "0.0.0.0:8000" ]
+    develop:
+      watch:
+        - path: controle_contas
+          action: sync
+          target: /home/app
+    ports:
+      - 8000:8000
+    networks:
+      - frontend
+      - backend
+    environment:
+      - DATABASE_URI=postgresql://postgres:postgres@db:5432/postgres
+      - SECRET_KEY=yoursecretkey
+      - JWT_SECRET_KEY=yoursecretkey
+    # env_file:
+    #   - ./contrib/.env-sample
+    restart: always
+
+  db:
+    container_name: database
+    image: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+    networks:
+      - backend
+    restart: always
+
+  migrate:
+    container_name: migration
+    depends_on:
+      - db
+    image: cc:latest
+    command: >
+      sh -c " flask db upgrade && flask create-admin-user"
+
+    environment:
+      - DATABASE_URI=postgresql://postgres:postgres@db:5432/postgres
+    networks:
+      - backend
+
+volumes:
+  db-data:
+
+networks:
+  frontend:
+  backend:

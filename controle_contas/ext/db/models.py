@@ -1,5 +1,6 @@
-from controle_contas.ext.db import db
 from datetime import datetime
+
+from controle_contas.ext.db import db
 
 
 class Source(db.Model):

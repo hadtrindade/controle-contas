@@ -1,7 +1,7 @@
-from flask_login import LoginManager, AnonymousUserMixin
-from controle_contas.ext.auth.models import User
 from flask import redirect, url_for
+from flask_login import AnonymousUserMixin, LoginManager
 
+from controle_contas.ext.auth.models import User
 
 login_manager = LoginManager()
 

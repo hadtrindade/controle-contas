@@ -1,17 +1,15 @@
 from flask import Blueprint, current_app, request
-from sqlalchemy.sql.expression import true
+from flask_jwt_extended import current_user, jwt_required
+from marshmallow import ValidationError
+
+from controle_contas.ext.auth.models import User
+from controle_contas.ext.db.models import Entry, Source
+from controle_contas.ext.jwt import jwt
 from controle_contas.ext.serializer.models import (
     EntrySchema,
-    UserSchema,
     SourceSchema,
+    UserSchema,
 )
-from marshmallow import ValidationError
-from sqlalchemy import and_
-from controle_contas.ext.db.models import Entry, Source
-from controle_contas.ext.auth.models import User
-from flask_jwt_extended import jwt_required, current_user
-from controle_contas.ext.jwt import jwt
-
 
 api = Blueprint("api", __name__)
 

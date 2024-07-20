@@ -1,0 +1,8 @@
+black
+pytest-flask
+pytest-cov
+flake8
+pytest
+ipdb
+ipython
+flask-shell-ipython

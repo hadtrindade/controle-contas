@@ -1,8 +1,9 @@
 import pytest
 from flask import url_for
+from werkzeug.security import generate_password_hash
+
 from controle_contas.app import create_app
 from controle_contas.ext.db import db
-from werkzeug.security import generate_password_hash
 from controle_contas.ext.serializer.models import UserSchema
 
 

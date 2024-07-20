@@ -1,6 +1,8 @@
-from controle_contas.ext.db import db
 from datetime import datetime
+
 from werkzeug.security import check_password_hash
+
+from controle_contas.ext.db import db
 
 
 class User(db.Model):
