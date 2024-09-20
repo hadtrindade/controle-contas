@@ -44,7 +44,7 @@ services:
       - db
     image: cc:latest
     command: >
-      sh -c " flask db upgrade && flask create-admin-user"
+      sh -c "flask db upgrade && flask create-admin-user"
 
     environment:
       - DATABASE_URI=postgresql://postgres:postgres@db:5432/postgres
